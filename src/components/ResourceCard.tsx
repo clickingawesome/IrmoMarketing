@@ -22,11 +22,15 @@ export default function ResourceCard({ resource }: { resource: Resource }) {
     <div className="group relative bg-[#141414] border border-gray-800/60 rounded-2xl overflow-hidden hover:border-gray-700/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 flex flex-col">
       <div className="relative h-44 bg-gradient-to-br from-gray-900 to-[#1a1a1a] overflow-hidden">
         {resource.thumbnail_url ? (
-          <img
-            src={resource.thumbnail_url}
-            alt={resource.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+          <>
+            <img
+              src={resource.thumbnail_url}
+              alt={resource.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <Icon size={48} className={`${config.color} opacity-20 group-hover:opacity-30 transition-opacity duration-300`} />
