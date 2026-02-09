@@ -167,6 +167,16 @@ export default function ResourceDetailPage() {
               <div className="flex items-center gap-4 mb-10">
                 <SocialShare url={shareUrl} title={resource.title} description={resource.description} />
               </div>
+
+              {resource.thumbnail_url && (
+                <div className="mb-10">
+                  <img
+                    src={resource.thumbnail_url}
+                    alt={resource.title}
+                    className="w-full rounded-xl border border-gray-800/60 shadow-2xl"
+                  />
+                </div>
+              )}
             </div>
           </div>
         )}
