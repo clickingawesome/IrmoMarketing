@@ -122,57 +122,55 @@ export default function Header() {
             >
               Resources
             </button>
-            {isAdmin && (
-              <div className="relative" ref={adminRef}>
-                <button
-                  onClick={() => setIsAdminOpen(!isAdminOpen)}
-                  className="flex items-center gap-2 text-white hover:text-[#F4B400] transition-colors text-xl"
-                >
-                  <Settings size={20} />
-                  Admin
-                </button>
-                {isAdminOpen && (
-                  <div className="absolute top-full right-0 mt-2 w-48 bg-[#1a1a1a] border border-gray-800 rounded-lg shadow-xl overflow-hidden">
-                    <button
-                      onClick={() => {
-                        navigate('/admin/books');
-                        setIsAdminOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
-                    >
-                      Manage Books
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate('/admin/testimonials');
-                        setIsAdminOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
-                    >
-                      Manage Testimonials
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate('/admin/projects');
-                        setIsAdminOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
-                    >
-                      Manage Projects
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate('/admin/resources');
-                        setIsAdminOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
-                    >
-                      Manage Resources
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+            <div className="relative" ref={adminRef}>
+              <button
+                onClick={() => setIsAdminOpen(!isAdminOpen)}
+                className="flex items-center gap-2 text-white hover:text-[#F4B400] transition-colors text-xl"
+              >
+                <Settings size={20} />
+                Admin
+              </button>
+              {isAdminOpen && (
+                <div className="absolute top-full right-0 mt-2 w-48 bg-[#1a1a1a] border border-gray-800 rounded-lg shadow-xl overflow-hidden">
+                  <button
+                    onClick={() => {
+                      navigate('/admin/books');
+                      setIsAdminOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
+                  >
+                    Manage Books
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/admin/testimonials');
+                      setIsAdminOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
+                  >
+                    Manage Testimonials
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/admin/projects');
+                      setIsAdminOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
+                  >
+                    Manage Projects
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/admin/resources');
+                      setIsAdminOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
+                  >
+                    Manage Resources
+                  </button>
+                </div>
+              )}
+            </div>
           </nav>
         </div>
 
@@ -229,50 +227,48 @@ export default function Header() {
             >
               Resources
             </button>
-            {isAdmin && (
-              <div className="border-t border-gray-800 pt-6">
-                <div className="flex items-center gap-2 text-gray-400 mb-3">
-                  <Settings size={20} />
-                  <span className="text-xl font-semibold">Admin</span>
-                </div>
-                <button
-                  onClick={() => {
-                    navigate('/admin/books');
-                    setIsMenuOpen(false);
-                  }}
-                  className="text-white hover:text-[#F4B400] transition-colors text-left text-xl mb-3 pl-4 block"
-                >
-                  Manage Books
-                </button>
-                <button
-                  onClick={() => {
-                    navigate('/admin/testimonials');
-                    setIsMenuOpen(false);
-                  }}
-                  className="text-white hover:text-[#F4B400] transition-colors text-left text-xl mb-3 pl-4 block"
-                >
-                  Manage Testimonials
-                </button>
-                <button
-                  onClick={() => {
-                    navigate('/admin/projects');
-                    setIsMenuOpen(false);
-                  }}
-                  className="text-white hover:text-[#F4B400] transition-colors text-left text-xl mb-3 pl-4 block"
-                >
-                  Manage Projects
-                </button>
-                <button
-                  onClick={() => {
-                    navigate('/admin/resources');
-                    setIsMenuOpen(false);
-                  }}
-                  className="text-white hover:text-[#F4B400] transition-colors text-left text-xl pl-4 block"
-                >
-                  Manage Resources
-                </button>
+            <div className="border-t border-gray-800 pt-6">
+              <div className="flex items-center gap-2 text-gray-400 mb-3">
+                <Settings size={20} />
+                <span className="text-xl font-semibold">Admin</span>
               </div>
-            )}
+              <button
+                onClick={() => {
+                  navigate('/admin/books');
+                  setIsMenuOpen(false);
+                }}
+                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl mb-3 pl-4 block"
+              >
+                Manage Books
+              </button>
+              <button
+                onClick={() => {
+                  navigate('/admin/testimonials');
+                  setIsMenuOpen(false);
+                }}
+                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl mb-3 pl-4 block"
+              >
+                Manage Testimonials
+              </button>
+              <button
+                onClick={() => {
+                  navigate('/admin/projects');
+                  setIsMenuOpen(false);
+                }}
+                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl mb-3 pl-4 block"
+              >
+                Manage Projects
+              </button>
+              <button
+                onClick={() => {
+                  navigate('/admin/resources');
+                  setIsMenuOpen(false);
+                }}
+                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl pl-4 block"
+              >
+                Manage Resources
+              </button>
+            </div>
           </nav>
         )}
       </div>
