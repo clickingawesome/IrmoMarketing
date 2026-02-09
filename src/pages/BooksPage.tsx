@@ -3,7 +3,7 @@ import { ArrowLeft, Info, ShoppingCart, BookOpen, Rocket, Moon, Star, Compass, G
 import { useNavigate } from 'react-router-dom';
 import { supabase, type Book } from '../lib/supabase';
 import Header from '../components/Header';
-import headshotImage from '../assets/images/177973283_10215629675493784_5339630275291513824_n copy.jpg';
+import headshotImage from '../assets/images/177973283_10215629675493784_5339630275291513824_n.jpg';
 
 const iconMap: Record<string, any> = {
   'rocket': Rocket,

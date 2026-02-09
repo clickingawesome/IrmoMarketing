@@ -4,6 +4,7 @@ import { ArrowLeft, BookOpen, FileText, HelpCircle, Gamepad2, DollarSign, Lock, 
 import { supabase, type Resource } from '../lib/supabase';
 import Header from '../components/Header';
 import SocialShare from '../components/SocialShare';
+import LeadCaptureModal from '../components/LeadCaptureModal';
 
 const ZeroClickCourse = lazy(() => import('./Resources/zero-click-course'));
 const MarketingTitleQuiz = lazy(() => import('./Resources/marketing-title-quiz'));
@@ -28,6 +29,7 @@ export default function ResourceDetailPage() {
   const [resource, setResource] = useState<Resource | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [showLeadModal, setShowLeadModal] = useState(false);
 
   useEffect(() => {
     if (slug) fetchResource(slug);
@@ -209,15 +211,13 @@ export default function ResourceDetailPage() {
                   <FileText size={48} className="mx-auto mb-4 text-sky-400 opacity-50" />
                   <h3 className="text-xl font-bold text-white mb-2">Download PDF</h3>
                   <p className="text-gray-400 text-sm mb-6">Get the full document as a downloadable PDF file.</p>
-                  <a
-                    href={resource.pdf_url!}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={() => setShowLeadModal(true)}
                     className="inline-flex items-center gap-2 bg-[#F4B400] hover:bg-[#d99f00] text-black font-semibold px-6 py-3 rounded-lg transition-colors"
                   >
                     <ExternalLink size={18} />
-                    Open PDF
-                  </a>
+                    Get PDF
+                  </button>
                 </div>
               </div>
             </div>
@@ -247,6 +247,16 @@ export default function ResourceDetailPage() {
           </div>
         )}
       </div>
+
+      {hasPdfUrl && (
+        <LeadCaptureModal
+          isOpen={showLeadModal}
+          onClose={() => setShowLeadModal(false)}
+          resourceTitle={resource?.title || ''}
+          resourceSlug={resource?.slug || ''}
+          pdfUrl={resource?.pdf_url || ''}
+        />
+      )}
     </div>
   );
 }
