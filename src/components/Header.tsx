@@ -1,13 +1,51 @@
 import { useState, useEffect, useRef } from 'react';
-import { Menu, X, Settings, ChevronDown } from 'lucide-react';
+import { Menu, X, Settings, ChevronDown, Briefcase, Images, BookOpen, Library, Music, Download, Star, ArrowRight, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+
+const creativeItems = [
+  {
+    category: 'Portfolio',
+    items: [
+      { label: 'Featured Projects', description: 'Curated highlights', icon: Star, action: 'scroll:portfolio' },
+      { label: 'Full Gallery', description: 'Browse all work', icon: Images, action: 'navigate:/projects' },
+    ],
+  },
+  {
+    category: 'Books',
+    items: [
+      { label: 'Featured Books', description: 'Top picks', icon: BookOpen, action: 'scroll:books' },
+      { label: 'All Books', description: 'Complete library', icon: Library, action: 'navigate:/books' },
+    ],
+  },
+  {
+    category: 'Music',
+    items: [
+      { label: 'Browse Music', description: 'Listen & explore', icon: Music, action: 'navigate:/music' },
+    ],
+  },
+  {
+    category: 'Resources',
+    items: [
+      { label: 'Free Downloads', description: 'Guides & tools', icon: Download, action: 'navigate:/resources' },
+    ],
+  },
+];
+
+const adminItems = [
+  { label: 'Manage Books', path: '/admin/books' },
+  { label: 'Manage Testimonials', path: '/admin/testimonials' },
+  { label: 'Manage Projects', path: '/admin/projects' },
+  { label: 'Manage Resources', path: '/admin/resources' },
+  { label: 'Manage Music', path: '/admin/music' },
+];
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isCreativeOpen, setIsCreativeOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const adminRef = useRef<HTMLDivElement>(null);
   const creativeRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -23,8 +61,16 @@ export default function Header() {
       }
     }
 
+    function handleScroll() {
+      setScrolled(window.scrollY > 20);
+    }
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -60,45 +106,47 @@ export default function Header() {
     setIsMenuOpen(false);
   };
 
+  function handleCreativeAction(action: string) {
+    const [type, target] = action.split(':');
+    if (type === 'scroll') {
+      scrollToSection(target);
+    } else {
+      navigate(target);
+    }
+    setIsCreativeOpen(false);
+    setIsMenuOpen(false);
+  }
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f0f]/95 backdrop-blur-sm border-b border-gray-800">
-      <div className="container mx-auto px-6 sm:px-8 md:px-12 py-4 sm:py-6">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      scrolled ? 'bg-[#0f0f0f]/98 backdrop-blur-md border-b border-gray-800/80 shadow-lg shadow-black/20' : 'bg-[#0f0f0f]/90 backdrop-blur-sm border-b border-gray-800/40'
+    }`}>
+      <div className="container mx-auto px-6 sm:px-8 md:px-12 py-4 sm:py-5">
         <div className="flex items-center justify-between">
           <button
             onClick={() => navigate('/')}
-            className="text-2xl sm:text-3xl font-bold"
+            className="text-2xl sm:text-3xl font-bold group"
           >
-            <span className="text-[#F4B400]">Nick</span> Irmo
+            <span className="text-[#F4B400] group-hover:text-[#ffcc40] transition-colors">Nick</span>
+            <span className="text-white"> Irmo</span>
           </button>
 
           <button
-            className="md:hidden text-white"
+            className="md:hidden text-white hover:text-[#F4B400] transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
 
-          <nav className="hidden md:flex items-center gap-8 lg:gap-12">
-            <button
-              onClick={() => {
-                scrollToSection('about');
-                setIsAdminOpen(false);
-                setIsCreativeOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
-            >
+          <nav className="hidden md:flex items-center gap-6 lg:gap-10">
+            <NavButton onClick={() => { scrollToSection('about'); setIsAdminOpen(false); setIsCreativeOpen(false); }}>
               About
-            </button>
-            <button
-              onClick={() => {
-                scrollToSection('services');
-                setIsAdminOpen(false);
-                setIsCreativeOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
-            >
+            </NavButton>
+            <NavButton onClick={() => { scrollToSection('services'); setIsAdminOpen(false); setIsCreativeOpen(false); }}>
               Services
-            </button>
+            </NavButton>
+
+            {/* Creative Mega Menu */}
             <div className="relative" ref={creativeRef}>
               <button
                 onClick={(e) => {
@@ -106,323 +154,205 @@ export default function Header() {
                   setIsCreativeOpen(!isCreativeOpen);
                   setIsAdminOpen(false);
                 }}
-                className="flex items-center gap-2 text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
+                className={`flex items-center gap-1.5 font-medium transition-colors text-base lg:text-lg ${
+                  isCreativeOpen ? 'text-[#F4B400]' : 'text-gray-300 hover:text-white'
+                }`}
               >
                 Creative
-                <ChevronDown size={18} className={`transition-transform ${isCreativeOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={16} className={`transition-transform duration-200 ${isCreativeOpen ? 'rotate-180' : ''}`} />
               </button>
-              {isCreativeOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[600px] bg-[#1a1a1a] border border-gray-800 rounded-lg shadow-2xl overflow-hidden">
-                  <div className="grid grid-cols-2 gap-6 p-6">
-                    <div>
-                      <h3 className="text-[#F4B400] font-bold text-sm uppercase tracking-wide mb-3">Portfolio</h3>
-                      <button
-                        onClick={() => {
-                          scrollToSection('portfolio');
-                          setIsCreativeOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
-                      >
-                        Featured Projects
-                      </button>
-                      <button
-                        onClick={() => {
-                          navigate('/projects');
-                          setIsCreativeOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
-                      >
-                        Full Gallery
-                      </button>
-                    </div>
-                    <div>
-                      <h3 className="text-[#F4B400] font-bold text-sm uppercase tracking-wide mb-3">Books</h3>
-                      <button
-                        onClick={() => {
-                          scrollToSection('books');
-                          setIsCreativeOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
-                      >
-                        Featured Books
-                      </button>
-                      <button
-                        onClick={() => {
-                          navigate('/books');
-                          setIsCreativeOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
-                      >
-                        All Books
-                      </button>
-                    </div>
-                    <div>
-                      <h3 className="text-[#F4B400] font-bold text-sm uppercase tracking-wide mb-3">Music</h3>
-                      <button
-                        onClick={() => {
-                          navigate('/music');
-                          setIsCreativeOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
-                      >
-                        Browse Music
-                      </button>
-                    </div>
-                    <div>
-                      <h3 className="text-[#F4B400] font-bold text-sm uppercase tracking-wide mb-3">Resources</h3>
-                      <button
-                        onClick={() => {
-                          navigate('/resources');
-                          setIsCreativeOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
-                      >
-                        Free Downloads
-                      </button>
+
+              <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-200 ${
+                isCreativeOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
+              }`}>
+                <div className="w-[560px] bg-[#141414] border border-gray-800/80 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden">
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-[#F4B400]/30 rounded-full" />
+
+                  <div className="p-2">
+                    <div className="grid grid-cols-2 gap-1">
+                      {creativeItems.map((group) => (
+                        <div key={group.category} className="p-3">
+                          <div className="flex items-center gap-2 mb-2 px-2">
+                            <div className="w-1 h-3.5 bg-[#F4B400] rounded-full" />
+                            <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-gray-500">{group.category}</h3>
+                          </div>
+                          <div className="space-y-0.5">
+                            {group.items.map((item) => (
+                              <button
+                                key={item.label}
+                                onClick={() => handleCreativeAction(item.action)}
+                                className="w-full text-left px-3 py-2.5 rounded-xl group/item hover:bg-white/[0.04] transition-all duration-150"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div className="w-9 h-9 rounded-lg bg-[#F4B400]/[0.08] flex items-center justify-center shrink-0 group-hover/item:bg-[#F4B400]/[0.15] transition-colors">
+                                    <item.icon size={17} className="text-[#F4B400]" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="text-sm font-medium text-white group-hover/item:text-[#F4B400] transition-colors">{item.label}</div>
+                                    <div className="text-xs text-gray-500 mt-0.5">{item.description}</div>
+                                  </div>
+                                  <ArrowRight size={14} className="text-gray-600 opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-150" />
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
+
+                  <div className="border-t border-gray-800/60 px-5 py-3 bg-[#111111]">
+                    <button
+                      onClick={() => { navigate('/resume'); setIsCreativeOpen(false); }}
+                      className="flex items-center gap-2 text-xs text-gray-500 hover:text-[#F4B400] transition-colors group/resume"
+                    >
+                      <Briefcase size={13} />
+                      <span>View Resume</span>
+                      <ArrowRight size={12} className="opacity-0 -translate-x-1 group-hover/resume:opacity-100 group-hover/resume:translate-x-0 transition-all duration-150" />
+                    </button>
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
-            <button
-              onClick={() => {
-                scrollToSection('testimonials');
-                setIsAdminOpen(false);
-                setIsCreativeOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
-            >
+
+            <NavButton onClick={() => { scrollToSection('testimonials'); setIsAdminOpen(false); setIsCreativeOpen(false); }}>
               Testimonials
-            </button>
-            <button
-              onClick={() => {
-                scrollToSection('contact');
-                setIsAdminOpen(false);
-                setIsCreativeOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
-            >
+            </NavButton>
+            <NavButton onClick={() => { scrollToSection('contact'); setIsAdminOpen(false); setIsCreativeOpen(false); }}>
               Contact
-            </button>
-            <div className="relative" ref={adminRef}>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsAdminOpen(!isAdminOpen);
-                }}
-                className="flex items-center gap-2 text-white hover:text-[#F4B400] transition-colors text-xl"
-              >
-                <Settings size={20} />
-                Admin
-              </button>
-              {isAdminOpen && (
-                <div className="absolute top-full right-0 mt-2 w-48 bg-[#1a1a1a] border border-gray-800 rounded-lg shadow-xl overflow-hidden">
-                  <button
-                    onClick={() => {
-                      navigate('/admin/books');
-                      setIsAdminOpen(false);
-                    }}
-                    className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
-                  >
-                    Manage Books
-                  </button>
-                  <button
-                    onClick={() => {
-                      navigate('/admin/testimonials');
-                      setIsAdminOpen(false);
-                    }}
-                    className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
-                  >
-                    Manage Testimonials
-                  </button>
-                  <button
-                    onClick={() => {
-                      navigate('/admin/projects');
-                      setIsAdminOpen(false);
-                    }}
-                    className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
-                  >
-                    Manage Projects
-                  </button>
-                  <button
-                    onClick={() => {
-                      navigate('/admin/resources');
-                      setIsAdminOpen(false);
-                    }}
-                    className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
-                  >
-                    Manage Resources
-                  </button>
-                  <button
-                    onClick={() => {
-                      navigate('/admin/music');
-                      setIsAdminOpen(false);
-                    }}
-                    className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
-                  >
-                    Manage Music
-                  </button>
+            </NavButton>
+
+            {/* Admin Dropdown */}
+            {isAdmin && (
+              <div className="relative" ref={adminRef}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsAdminOpen(!isAdminOpen);
+                    setIsCreativeOpen(false);
+                  }}
+                  className={`flex items-center gap-1.5 font-medium transition-colors text-base lg:text-lg ${
+                    isAdminOpen ? 'text-[#F4B400]' : 'text-gray-400 hover:text-gray-200'
+                  }`}
+                >
+                  <Settings size={17} />
+                  Admin
+                  <ChevronDown size={14} className={`transition-transform duration-200 ${isAdminOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <div className={`absolute top-full right-0 pt-3 transition-all duration-200 ${
+                  isAdminOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
+                }`}>
+                  <div className="w-52 bg-[#141414] border border-gray-800/80 rounded-xl shadow-2xl shadow-black/40 overflow-hidden p-1.5">
+                    {adminItems.map((item) => (
+                      <button
+                        key={item.path}
+                        onClick={() => {
+                          navigate(item.path);
+                          setIsAdminOpen(false);
+                        }}
+                        className="w-full text-left px-3.5 py-2.5 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/[0.05] transition-all duration-150 flex items-center justify-between group/admin"
+                      >
+                        {item.label}
+                        <ChevronRight size={14} className="text-gray-600 opacity-0 group-hover/admin:opacity-100 transition-opacity" />
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </nav>
         </div>
 
-        {isMenuOpen && (
-          <nav className="md:hidden mt-4 sm:mt-6 flex flex-col gap-4 sm:gap-6 pb-4 sm:pb-6">
-            <button
-              onClick={() => scrollToSection('about')}
-              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
-            >
-              About
-            </button>
-            <button
-              onClick={() => scrollToSection('services')}
-              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
-            >
-              Services
-            </button>
+        {/* Mobile Menu */}
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ${
+          isMenuOpen ? 'max-h-[80vh] opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'
+        }`}>
+          <nav className="flex flex-col gap-1 pb-4">
+            <MobileNavButton onClick={() => scrollToSection('about')}>About</MobileNavButton>
+            <MobileNavButton onClick={() => scrollToSection('services')}>Services</MobileNavButton>
 
-            <div className="border-t border-gray-800 pt-4">
-              <div className="flex items-center gap-2 text-[#F4B400] mb-3">
-                <span className="text-xl font-semibold">Creative</span>
+            <div className="mt-2 mb-1">
+              <div className="flex items-center gap-2 px-3 py-2">
+                <div className="w-1 h-4 bg-[#F4B400] rounded-full" />
+                <span className="text-sm font-bold uppercase tracking-wider text-[#F4B400]">Creative</span>
               </div>
-              <div className="pl-4 space-y-3">
-                <div>
-                  <p className="text-gray-400 text-sm mb-2">Portfolio</p>
-                  <button
-                    onClick={() => {
-                      scrollToSection('portfolio');
-                      setIsMenuOpen(false);
-                    }}
-                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block mb-2"
-                  >
-                    Featured Projects
-                  </button>
-                  <button
-                    onClick={() => {
-                      navigate('/projects');
-                      setIsMenuOpen(false);
-                    }}
-                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block"
-                  >
-                    Full Gallery
-                  </button>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-sm mb-2">Books</p>
-                  <button
-                    onClick={() => {
-                      scrollToSection('books');
-                      setIsMenuOpen(false);
-                    }}
-                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block mb-2"
-                  >
-                    Featured Books
-                  </button>
-                  <button
-                    onClick={() => {
-                      navigate('/books');
-                      setIsMenuOpen(false);
-                    }}
-                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block"
-                  >
-                    All Books
-                  </button>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-sm mb-2">Music</p>
-                  <button
-                    onClick={() => {
-                      navigate('/music');
-                      setIsMenuOpen(false);
-                    }}
-                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block"
-                  >
-                    Browse Music
-                  </button>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-sm mb-2">Resources</p>
-                  <button
-                    onClick={() => {
-                      navigate('/resources');
-                      setIsMenuOpen(false);
-                    }}
-                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block"
-                  >
-                    Free Downloads
-                  </button>
-                </div>
+              <div className="pl-2 space-y-0.5">
+                {creativeItems.map((group) => (
+                  <div key={group.category}>
+                    <div className="px-4 py-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-600">{group.category}</span>
+                    </div>
+                    {group.items.map((item) => (
+                      <button
+                        key={item.label}
+                        onClick={() => handleCreativeAction(item.action)}
+                        className="w-full text-left px-4 py-2.5 flex items-center gap-3 rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06]"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-[#F4B400]/[0.08] flex items-center justify-center shrink-0">
+                          <item.icon size={15} className="text-[#F4B400]" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-white">{item.label}</div>
+                          <div className="text-[11px] text-gray-500">{item.description}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
 
-            <button
-              onClick={() => scrollToSection('testimonials')}
-              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
-            >
-              Testimonials
-            </button>
-            <button
-              onClick={() => scrollToSection('contact')}
-              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
-            >
-              Contact
-            </button>
-            <div className="border-t border-gray-800 pt-6">
-              <div className="flex items-center gap-2 text-gray-400 mb-3">
-                <Settings size={20} />
-                <span className="text-xl font-semibold">Admin</span>
+            <MobileNavButton onClick={() => scrollToSection('testimonials')}>Testimonials</MobileNavButton>
+            <MobileNavButton onClick={() => scrollToSection('contact')}>Contact</MobileNavButton>
+
+            {isAdmin && (
+              <div className="mt-3 pt-3 border-t border-gray-800/60">
+                <div className="flex items-center gap-2 px-3 py-2">
+                  <Settings size={14} className="text-gray-500" />
+                  <span className="text-sm font-bold uppercase tracking-wider text-gray-500">Admin</span>
+                </div>
+                <div className="pl-2 space-y-0.5">
+                  {adminItems.map((item) => (
+                    <button
+                      key={item.path}
+                      onClick={() => {
+                        navigate(item.path);
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06]"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <button
-                onClick={() => {
-                  navigate('/admin/books');
-                  setIsMenuOpen(false);
-                }}
-                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl mb-3 pl-4 block"
-              >
-                Manage Books
-              </button>
-              <button
-                onClick={() => {
-                  navigate('/admin/testimonials');
-                  setIsMenuOpen(false);
-                }}
-                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl mb-3 pl-4 block"
-              >
-                Manage Testimonials
-              </button>
-              <button
-                onClick={() => {
-                  navigate('/admin/projects');
-                  setIsMenuOpen(false);
-                }}
-                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl mb-3 pl-4 block"
-              >
-                Manage Projects
-              </button>
-              <button
-                onClick={() => {
-                  navigate('/admin/resources');
-                  setIsMenuOpen(false);
-                }}
-                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl mb-3 pl-4 block"
-              >
-                Manage Resources
-              </button>
-              <button
-                onClick={() => {
-                  navigate('/admin/music');
-                  setIsMenuOpen(false);
-                }}
-                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl pl-4 block"
-              >
-                Manage Music
-              </button>
-            </div>
+            )}
           </nav>
-        )}
+        </div>
       </div>
     </header>
+  );
+}
+
+function NavButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      className="text-gray-300 hover:text-white font-medium transition-colors text-base lg:text-lg relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-[#F4B400] after:transition-all after:duration-200 hover:after:w-full"
+    >
+      {children}
+    </button>
+  );
+}
+
+function MobileNavButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      className="text-left px-3 py-2.5 text-lg font-medium text-white hover:text-[#F4B400] rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06]"
+    >
+      {children}
+    </button>
   );
 }
