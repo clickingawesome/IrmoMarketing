@@ -138,10 +138,11 @@ export default function MusicPage() {
               <div className="relative pt-[56.25%] bg-black rounded-lg overflow-hidden">
                 <iframe
                   className="absolute inset-0 w-full h-full"
-                  src={`https://www.youtube.com/embed/${selectedTrack.youtube_id}?autoplay=1`}
+                  src={`https://www.youtube.com/embed/${selectedTrack.youtube_id}?autoplay=1&enablejsapi=1&origin=${window.location.origin}`}
                   title={selectedTrack.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
                 ></iframe>
               </div>
               <div className="mt-4 text-white">
