@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { supabase } from "../../lib/supabase";
 
 const COURSE_DATA = {
   title: "Zero-Click Marketing",
@@ -198,17 +199,63 @@ const COURSE_DATA = {
   ]
 };
 
+const RESOURCE_SLUG = "zero-click-course";
+const RESOURCE_TITLE = "Zero-Click Marketing Mini Course";
+
 const LeadCapture = ({ onSubmit, position }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email && name) {
+    if (!email || !name) return;
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      const { error: dbError } = await supabase
+        .from("lead_captures")
+        .insert({
+          name,
+          email,
+          company: company || null,
+          resource_slug: RESOURCE_SLUG,
+          resource_title: RESOURCE_TITLE,
+          user_agent: navigator.userAgent,
+          referrer: document.referrer || null,
+        });
+
+      if (dbError) throw dbError;
+
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      fetch(`${supabaseUrl}/functions/v1/send-lead-notification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${supabaseAnonKey}`,
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          company,
+          resourceTitle: RESOURCE_TITLE,
+          resourceSlug: RESOURCE_SLUG,
+        }),
+      }).catch(() => {});
+
       setSubmitted(true);
       onSubmit({ name, email, company });
+    } catch (err) {
+      console.error("Error submitting lead:", err);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -319,26 +366,39 @@ const LeadCapture = ({ onSubmit, position }) => {
           onFocus={(e) => e.target.style.borderColor = "rgba(0,224,150,0.5)"}
           onBlur={(e) => e.target.style.borderColor = "rgba(255,255,255,0.12)"}
         />
+        {error && (
+          <div style={{
+            background: "rgba(255,80,80,0.08)",
+            border: "1px solid rgba(255,80,80,0.2)",
+            borderRadius: 10,
+            padding: "12px 14px",
+            fontSize: 13,
+            color: "rgba(255,120,120,0.9)",
+          }}>
+            {error}
+          </div>
+        )}
         <button
           type="submit"
+          disabled={isSubmitting}
           style={{
-            background: "linear-gradient(135deg, #00e096 0%, #00b4d8 100%)",
+            background: isSubmitting ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg, #00e096 0%, #00b4d8 100%)",
             border: "none",
             borderRadius: 10,
             padding: "15px 24px",
-            color: "#0a1628",
+            color: isSubmitting ? "rgba(255,255,255,0.4)" : "#0a1628",
             fontSize: 16,
             fontWeight: 700,
             fontFamily: "'DM Sans', sans-serif",
-            cursor: "pointer",
+            cursor: isSubmitting ? "not-allowed" : "pointer",
             marginTop: 4,
             transition: "transform 0.15s, box-shadow 0.15s",
-            boxShadow: "0 4px 20px rgba(0, 224, 150, 0.25)"
+            boxShadow: isSubmitting ? "none" : "0 4px 20px rgba(0, 224, 150, 0.25)"
           }}
-          onMouseEnter={(e) => { e.target.style.transform = "translateY(-1px)"; e.target.style.boxShadow = "0 6px 28px rgba(0, 224, 150, 0.35)"; }}
-          onMouseLeave={(e) => { e.target.style.transform = "translateY(0)"; e.target.style.boxShadow = "0 4px 20px rgba(0, 224, 150, 0.25)"; }}
+          onMouseEnter={(e) => { if (!isSubmitting) { e.target.style.transform = "translateY(-1px)"; e.target.style.boxShadow = "0 6px 28px rgba(0, 224, 150, 0.35)"; } }}
+          onMouseLeave={(e) => { e.target.style.transform = "translateY(0)"; e.target.style.boxShadow = isSubmitting ? "none" : "0 4px 20px rgba(0, 224, 150, 0.25)"; }}
         >
-          {position === "gate" ? "Start Learning →" : "Send Me the Toolkit →"}
+          {isSubmitting ? "Submitting..." : position === "gate" ? "Start Learning →" : "Send Me the Toolkit →"}
         </button>
       </form>
     </div>
@@ -430,6 +490,7 @@ export default function ZeroClickCourse() {
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
         
         @media (max-width: 768px) {
+          .gate-grid { grid-template-columns: 1fr !important; gap: 32px !important; margin-top: 40px !important; }
           .course-grid { grid-template-columns: 1fr !important; }
           .course-sidebar {
             position: fixed !important;
@@ -533,29 +594,72 @@ export default function ZeroClickCourse() {
         {/* Gate */}
         {gated ? (
           <div style={{
-            maxWidth: 520, margin: "80px auto", animation: "fadeIn 0.6s ease"
-          }}>
-            <div style={{ textAlign: "center", marginBottom: 36 }}>
-              <div style={{ fontSize: 56, marginBottom: 16 }}>⚡</div>
-              <h2 style={{
-                fontFamily: "'Instrument Serif', Georgia, serif",
-                fontSize: 32, fontWeight: 400, letterSpacing: "-0.02em", marginBottom: 12
+            maxWidth: 900, margin: "60px auto", animation: "fadeIn 0.6s ease",
+            display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center"
+          }} className="gate-grid">
+            <div>
+              <div style={{
+                position: "relative", borderRadius: 16, overflow: "hidden",
+                aspectRatio: "4/3",
+                boxShadow: "0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06)"
               }}>
-                Master Zero-Click Marketing in 17 Minutes
-              </h2>
-              <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 16, lineHeight: 1.6, maxWidth: 440, margin: "0 auto" }}>
-                5 interactive lessons. Quizzes to test your knowledge. A 30-day action plan you can implement immediately.
-              </p>
+                <img
+                  src="https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  alt="Zero-Click Marketing Strategy"
+                  style={{
+                    width: "100%", height: "100%", objectFit: "cover", display: "block"
+                  }}
+                />
+                <div style={{
+                  position: "absolute", inset: 0,
+                  background: "linear-gradient(135deg, rgba(6,13,26,0.5) 0%, rgba(0,224,150,0.12) 100%)"
+                }} />
+                <div style={{
+                  position: "absolute", bottom: 0, left: 0, right: 0,
+                  padding: "32px 24px 24px",
+                  background: "linear-gradient(to top, rgba(6,13,26,0.95) 0%, transparent 100%)"
+                }}>
+                  <div style={{
+                    display: "inline-flex", alignItems: "center", gap: 6,
+                    background: "rgba(0,224,150,0.15)", border: "1px solid rgba(0,224,150,0.25)",
+                    borderRadius: 100, padding: "4px 12px", fontSize: 11, color: "#00e096",
+                    fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                    marginBottom: 10
+                  }}>
+                    Free Course
+                  </div>
+                  <div style={{
+                    fontFamily: "'Instrument Serif', Georgia, serif",
+                    fontSize: 26, fontWeight: 400, letterSpacing: "-0.02em", lineHeight: 1.2,
+                    color: "#fff"
+                  }}>
+                    {COURSE_DATA.title}
+                  </div>
+                </div>
+              </div>
               <div style={{
                 display: "flex", justifyContent: "center", gap: 24, marginTop: 20,
                 color: "rgba(255,255,255,0.4)", fontSize: 13, fontWeight: 500
               }}>
-                <span>📚 5 Modules</span>
-                <span>⏱️ ~17 min</span>
-                <span>✅ Quizzes</span>
+                <span>5 Modules</span>
+                <span style={{ color: "rgba(255,255,255,0.15)" }}>|</span>
+                <span>~17 min</span>
+                <span style={{ color: "rgba(255,255,255,0.15)" }}>|</span>
+                <span>Quizzes Included</span>
               </div>
             </div>
-            <LeadCapture onSubmit={handleGateSubmit} position="gate" />
+            <div>
+              <h2 style={{
+                fontFamily: "'Instrument Serif', Georgia, serif",
+                fontSize: 32, fontWeight: 400, letterSpacing: "-0.02em", marginBottom: 12, lineHeight: 1.2
+              }}>
+                Master Zero-Click Marketing in 17 Minutes
+              </h2>
+              <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 16, lineHeight: 1.6, marginBottom: 28 }}>
+                5 interactive lessons. Quizzes to test your knowledge. A 30-day action plan you can implement immediately.
+              </p>
+              <LeadCapture onSubmit={handleGateSubmit} position="gate" />
+            </div>
           </div>
         ) : showCompletion ? (
           /* Completion Screen */
