@@ -10,11 +10,13 @@ import SEO from '../components/SEO';
 const ZeroClickCourse = lazy(() => import('./Resources/zero-click-course'));
 const MarketingTitleQuiz = lazy(() => import('./Resources/marketing-title-quiz'));
 const PDFFlipbook = lazy(() => import('../components/Resources/flipbook'));
+const TrollKingGame = lazy(() => import('./Resources/game'));
 
 const COMPONENT_MAP: Record<string, React.LazyExoticComponent<React.ComponentType>> = {
   'zero-click-course': ZeroClickCourse,
   'marketing-title-quiz': MarketingTitleQuiz,
   'flipbook': PDFFlipbook,
+  'troll-king-game': TrollKingGame,
 };
 
 const CATEGORY_META: Record<string, { icon: typeof BookOpen; label: string; color: string; bg: string }> = {
