@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Menu, X, Settings, ChevronDown, Briefcase, Images, BookOpen, Library, Music, Download, Star, ArrowRight, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
 
 const creativeItems = [
   {
@@ -46,7 +45,7 @@ export default function Header() {
   const [isCreativeOpen, setIsCreativeOpen] = useState(false);
   const [isMobileCreativeOpen, setIsMobileCreativeOpen] = useState(false);
   const [isMobileAdminOpen, setIsMobileAdminOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const adminRef = useRef<HTMLDivElement>(null);
   const creativeRef = useRef<HTMLDivElement>(null);
@@ -75,20 +74,6 @@ export default function Header() {
     };
   }, []);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setIsAdmin(!!session);
-    };
-
-    checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAdmin(!!session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   const scrollToSection = (sectionId: string) => {
     if (location.pathname !== '/') {
