@@ -3,6 +3,7 @@ import { Star, User, Quote } from 'lucide-react';
 import { supabase, type Testimonial } from '../lib/supabase';
 import Header from '../components/Header';
 import SEO from '../components/SEO';
+import { buildTestimonialsPageSchema } from '../lib/structuredData';
 
 export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -49,6 +50,7 @@ export default function TestimonialsPage() {
         title="Testimonials - Nick Irmo"
         description="Read what clients say about working with Nick Irmo. Real testimonials from marketing leaders, business owners, and creative directors."
         canonical="https://irmomarketing.com/testimonials"
+        structuredData={buildTestimonialsPageSchema()}
       />
       <div className="min-h-screen bg-[#0f0f0f]">
         <Header />

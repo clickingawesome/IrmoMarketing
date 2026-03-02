@@ -3,6 +3,7 @@ import { Music, Play, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import SEO from '../components/SEO';
 import Header from '../components/Header';
+import { buildMusicPageSchema } from '../lib/structuredData';
 
 interface MusicTrack {
   id: string;
@@ -86,7 +87,7 @@ export default function MusicPage() {
       <SEO
         title="Music & DJ Mixes - DJ Big Dill"
         description="Check out the latest DJ mixes and music productions by DJ Big Dill. Watch videos and listen to tracks on YouTube."
-        keywords="DJ Big Dill, DJ mixes, music production, YouTube DJ, electronic music"
+        structuredData={buildMusicPageSchema()}
       />
       <Header />
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 pt-32 pb-20">

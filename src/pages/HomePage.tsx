@@ -7,6 +7,7 @@ import Books from '../components/Books';
 import Testimonials from '../components/Testimonials';
 import Contact from '../components/Contact';
 import SEO from '../components/SEO';
+import { buildHomepageSchemas } from '../lib/structuredData';
 
 export default function HomePage() {
   return (
@@ -15,6 +16,7 @@ export default function HomePage() {
         title="Nick Irmo - Digital Marketing Strategist & Creative Director"
         description="Marketing Director and Creative Director with 15+ years experience. Channel Marketing Expert | $40M+ Pipeline • 110K+ Partners • AI-Driven Growth | Author"
         canonical="https://irmomarketing.com"
+        structuredData={buildHomepageSchemas()}
       />
       <div className="min-h-screen bg-[#0f0f0f]">
         <Header />

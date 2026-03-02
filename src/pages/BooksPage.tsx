@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase, type Book } from '../lib/supabase';
 import Header from '../components/Header';
 import SEO from '../components/SEO';
+import { buildBooksPageSchema } from '../lib/structuredData';
 import headshotImage from '../assets/images/177973283_10215629675493784_5339630275291513824_n.jpg';
 
 const iconMap: Record<string, any> = {
@@ -98,6 +99,7 @@ export default function BooksPage() {
         title="Books by Nick Irmo"
         description="Explore marketing books and guides by Nick Irmo. Learn about AI-powered marketing strategies, channel marketing, and digital transformation."
         canonical="https://irmomarketing.com/books"
+        structuredData={buildBooksPageSchema()}
       />
       <div className="min-h-screen bg-[#0f0f0f]">
         <Header />

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Mail, Phone, Linkedin, Award, Briefcase, GraduationCap, Download } from 'lucide-react';
 import SEO from '../components/SEO';
+import { buildResumePageSchema } from '../lib/structuredData';
 
 export default function ResumePage() {
   return (
@@ -9,6 +10,7 @@ export default function ResumePage() {
         title="Resume - Nick Irmo"
         description="View Nick Irmo's professional resume. Marketing Director with 15+ years experience in channel marketing, digital strategy, and creative direction."
         canonical="https://irmomarketing.com/resume"
+        structuredData={buildResumePageSchema()}
       />
       <div className="min-h-screen bg-[#0f0f0f]">
       <div className="bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] py-20">

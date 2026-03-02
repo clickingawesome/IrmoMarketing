@@ -4,6 +4,7 @@ import { ExternalLink, Folder } from 'lucide-react';
 import { supabase, type Project } from '../lib/supabase';
 import Header from '../components/Header';
 import SEO from '../components/SEO';
+import { buildProjectsPageSchema } from '../lib/structuredData';
 
 const cardColors = [
   'from-[#4A5568] to-[#5A4A7B]',
@@ -61,6 +62,7 @@ export default function AllProjectsPage() {
         title="All Projects - Portfolio"
         description="Browse my complete portfolio of marketing projects, campaigns, and creative work."
         canonical="https://irmomarketing.com/projects"
+        structuredData={buildProjectsPageSchema()}
       />
       <div className="min-h-screen bg-[#0f0f0f]">
         <Header />

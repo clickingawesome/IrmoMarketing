@@ -6,6 +6,7 @@ interface SEOProps {
   canonical?: string;
   ogImage?: string;
   ogType?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 export default function SEO({
@@ -13,9 +14,16 @@ export default function SEO({
   description,
   canonical = 'https://irmomarketing.com',
   ogImage = 'https://irmomarketing.com/images/irmo-marketing-bolt-new-02-08-2026_06_05_pm.png',
-  ogType = 'website'
+  ogType = 'website',
+  structuredData,
 }: SEOProps) {
   const fullTitle = title.includes('Nick Irmo') ? title : `${title} | Nick Irmo`;
+
+  const schemas = structuredData
+    ? Array.isArray(structuredData)
+      ? structuredData
+      : [structuredData]
+    : [];
 
   return (
     <Helmet>
@@ -33,6 +41,12 @@ export default function SEO({
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
+
+      {schemas.map((schema, index) => (
+        <script key={index} type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      ))}
     </Helmet>
   );
 }
