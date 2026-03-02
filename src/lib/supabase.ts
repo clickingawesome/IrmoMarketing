@@ -17,6 +17,7 @@ export type Project = {
   tags: string[];
   image_url: string | null;
   is_featured: boolean;
+  is_visible: boolean;
   order_index: number;
   created_at: string;
   view_type: 'case_study' | 'gallery' | 'external_link';

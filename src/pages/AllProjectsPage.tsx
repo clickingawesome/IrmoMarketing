@@ -25,7 +25,7 @@ export default function AllProjectsPage() {
         const { data, error } = await supabase
           .from('projects')
           .select('*')
-          .eq('is_featured', true)
+          .eq('is_visible', true)
           .order('order_index', { ascending: true });
 
         if (error) throw error;

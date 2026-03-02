@@ -76,7 +76,8 @@ export default function AdminProjectsPage() {
         cta_description: project.cta_description,
         gallery_images: project.gallery_images,
         external_link: project.external_link,
-        is_featured: project.is_featured
+        is_featured: project.is_featured,
+        is_visible: project.is_visible
       };
 
       const { error } = await supabase
@@ -389,9 +390,31 @@ export default function AdminProjectsPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 border-r border-gray-700 pr-4">
+                      <span className={`text-sm font-semibold ${project.is_visible ? 'text-green-400' : 'text-gray-500'}`}>
+                        {project.is_visible ? 'Visible' : 'Hidden'}
+                      </span>
+                      <button
+                        onClick={async () => {
+                          const newValue = !project.is_visible;
+                          const updatedProject = { ...project, is_visible: newValue };
+                          await handleSave(updatedProject);
+                        }}
+                        disabled={saving}
+                        className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#F4B400] focus:ring-offset-2 focus:ring-offset-[#1a1a1a] disabled:opacity-50 ${
+                          project.is_visible ? 'bg-green-500' : 'bg-gray-600'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                            project.is_visible ? 'translate-x-7' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
                     <div className="flex items-center gap-3">
-                      <span className={`text-sm font-semibold ${project.is_featured ? 'text-green-400' : 'text-gray-500'}`}>
-                        {project.is_featured ? 'Visible on Site' : 'Hidden from Site'}
+                      <span className={`text-sm font-semibold ${project.is_featured ? 'text-[#F4B400]' : 'text-gray-500'}`}>
+                        {project.is_featured ? 'Featured' : 'Not Featured'}
                       </span>
                       <button
                         onClick={async () => {
@@ -401,7 +424,7 @@ export default function AdminProjectsPage() {
                         }}
                         disabled={saving}
                         className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#F4B400] focus:ring-offset-2 focus:ring-offset-[#1a1a1a] disabled:opacity-50 ${
-                          project.is_featured ? 'bg-green-500' : 'bg-gray-600'
+                          project.is_featured ? 'bg-[#F4B400]' : 'bg-gray-600'
                         }`}
                       >
                         <span
