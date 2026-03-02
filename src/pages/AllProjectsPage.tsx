@@ -1,9 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Folder } from 'lucide-react';
 import { supabase, type Project } from '../lib/supabase';
 import Header from '../components/Header';
 import SEO from '../components/SEO';
+
+const cardColors = [
+  'from-[#4A5568] to-[#5A4A7B]',
+  'from-[#2C5F6F] to-[#1A4D5C]',
+  'from-[#8B6F47] to-[#6B4F27]',
+  'from-[#6B3951] to-[#4B1931]',
+  'from-[#2D5A7B] to-[#1D3A5B]',
+  'from-[#5A3F7B] to-[#3A1F5B]',
+];
 
 export default function AllProjectsPage() {
   const navigate = useNavigate();
@@ -16,8 +25,8 @@ export default function AllProjectsPage() {
         const { data, error } = await supabase
           .from('projects')
           .select('*')
-          .eq('is_visible', true)
-          .order('created_at', { ascending: false });
+          .eq('is_featured', true)
+          .order('order_index', { ascending: true });
 
         if (error) throw error;
         setProjects(data || []);
@@ -73,57 +82,49 @@ export default function AllProjectsPage() {
               </div>
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.map((project) => (
+                {projects.map((project, index) => (
                   <div
                     key={project.id}
-                    className="bg-[#1a1a1a] border border-gray-800 rounded-lg overflow-hidden hover:border-[#F4B400] transition-all group"
+                    className="bg-[#0f0f0f] rounded-lg overflow-hidden border border-gray-800 hover:border-[#F4B400] transition-all duration-300 group"
                   >
-                    <div className="relative overflow-hidden aspect-video">
-                      <img
-                        src={project.image_url}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+                    <div className={`h-56 sm:h-72 bg-gradient-to-br ${cardColors[index % cardColors.length]} flex items-center justify-center`}>
+                      <Folder className="text-[#F4B400]" size={72} />
                     </div>
-                    <div className="p-6">
-                      <span className="inline-block px-3 py-1 bg-[#F4B400] text-black text-xs font-bold rounded-full mb-3">
+                    <div className="p-6 sm:p-8">
+                      <span className="inline-block px-4 py-1.5 sm:px-5 sm:py-2 bg-[#F4B400] text-black text-xs sm:text-sm font-semibold rounded-full mb-3 sm:mb-4">
                         {project.category}
                       </span>
-                      <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-[#F4B400] transition-colors">
-                        {project.title}
-                      </h3>
-                      <p className="text-gray-300 mb-6 line-clamp-3">
+                      <h3 className="text-white text-2xl sm:text-3xl font-semibold mb-3 sm:mb-4">{project.title}</h3>
+                      <p className="text-gray-400 text-sm sm:text-base mb-4 sm:mb-6 leading-relaxed line-clamp-3">
                         {project.description}
                       </p>
-                      <div className="flex flex-wrap gap-3">
-                        {project.case_study_content && (
-                          <button
-                            onClick={() => navigate(`/project/${project.id}/case-study`)}
-                            className="px-4 py-2 bg-[#F4B400] text-black font-bold rounded hover:bg-[#d9a000] transition-colors"
+                      <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6">
+                        {project.tags.map((tag, tagIndex) => (
+                          <span
+                            key={tagIndex}
+                            className="px-2.5 py-1.5 sm:px-3 sm:py-2 bg-[#1a1a1a] text-gray-400 text-xs sm:text-sm rounded border border-gray-700"
                           >
-                            View Case Study
-                          </button>
-                        )}
-                        {project.gallery_images && project.gallery_images.length > 0 && (
-                          <button
-                            onClick={() => navigate(`/project/${project.id}/gallery`)}
-                            className="px-4 py-2 border border-gray-600 text-white font-bold rounded hover:border-[#F4B400] hover:text-[#F4B400] transition-colors"
-                          >
-                            View Gallery
-                          </button>
-                        )}
-                        {project.external_link && (
-                          <a
-                            href={project.external_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-4 py-2 border border-gray-600 text-white font-bold rounded hover:border-[#F4B400] hover:text-[#F4B400] transition-colors inline-flex items-center gap-2"
-                          >
-                            Visit Site
-                            <ExternalLink size={16} />
-                          </a>
-                        )}
+                            {tag}
+                          </span>
+                        ))}
                       </div>
+                      {project.view_type === 'external_link' ? (
+                        <a
+                          href={project.external_link || '#'}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#F4B400] hover:text-white transition-colors flex items-center gap-3 text-base"
+                        >
+                          View Project <ExternalLink size={24} />
+                        </a>
+                      ) : (
+                        <button
+                          onClick={() => navigate(project.view_type === 'gallery' ? `/project/${project.id}/gallery` : `/project/${project.id}/case-study`)}
+                          className="text-[#F4B400] hover:text-white transition-colors flex items-center gap-3 text-base"
+                        >
+                          View Details <ExternalLink size={24} />
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
