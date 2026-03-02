@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Music, Play, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import SEO from '../components/SEO';
+import Header from '../components/Header';
 
 interface MusicTrack {
   id: string;
@@ -60,8 +61,8 @@ export default function MusicPage() {
         description="Check out the latest DJ mixes and music productions by DJ Big Dill. Watch videos and listen to tracks on YouTube."
         keywords="DJ Big Dill, DJ mixes, music production, YouTube DJ, electronic music"
       />
-
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 py-20">
+      <Header />
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="flex items-center justify-center gap-3 mb-4">
