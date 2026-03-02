@@ -75,12 +75,6 @@ export default function Header() {
 
           <nav className="hidden md:flex items-center gap-8 lg:gap-12">
             <button
-              onClick={() => scrollToSection('home')}
-              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
-            >
-              Home
-            </button>
-            <button
               onClick={() => scrollToSection('about')}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
@@ -176,12 +170,6 @@ export default function Header() {
 
         {isMenuOpen && (
           <nav className="md:hidden mt-4 sm:mt-6 flex flex-col gap-4 sm:gap-6 pb-4 sm:pb-6">
-            <button
-              onClick={() => scrollToSection('home')}
-              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
-            >
-              Home
-            </button>
             <button
               onClick={() => scrollToSection('about')}
               className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
