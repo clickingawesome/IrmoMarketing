@@ -367,11 +367,13 @@ export default function AdminProjectsPage() {
                         {project.is_featured ? 'Visible on Site' : 'Hidden from Site'}
                       </span>
                       <button
-                        onClick={() => {
-                          updateProject(projectIndex, 'is_featured', !project.is_featured);
-                          handleSave({ ...project, is_featured: !project.is_featured });
+                        onClick={async () => {
+                          const newValue = !project.is_featured;
+                          updateProject(projectIndex, 'is_featured', newValue);
+                          await handleSave({ ...project, is_featured: newValue });
                         }}
-                        className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#F4B400] focus:ring-offset-2 focus:ring-offset-[#1a1a1a] ${
+                        disabled={saving}
+                        className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#F4B400] focus:ring-offset-2 focus:ring-offset-[#1a1a1a] disabled:opacity-50 ${
                           project.is_featured ? 'bg-green-500' : 'bg-gray-600'
                         }`}
                       >
