@@ -369,8 +369,9 @@ export default function AdminProjectsPage() {
                       <button
                         onClick={async () => {
                           const newValue = !project.is_featured;
+                          const updatedProject = { ...project, is_featured: newValue };
                           updateProject(projectIndex, 'is_featured', newValue);
-                          await handleSave({ ...project, is_featured: newValue });
+                          await handleSave(updatedProject);
                         }}
                         disabled={saving}
                         className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#F4B400] focus:ring-offset-2 focus:ring-offset-[#1a1a1a] disabled:opacity-50 ${
