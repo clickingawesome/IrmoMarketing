@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import HomePage from './pages/HomePage';
 import BooksPage from './pages/BooksPage';
 import ResumePage from './pages/ResumePage';
@@ -13,21 +14,23 @@ import AdminResourcesPage from './pages/AdminResourcesPage';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/books" element={<BooksPage />} />
-        <Route path="/resume" element={<ResumePage />} />
-        <Route path="/resources" element={<ResourcesPage />} />
-        <Route path="/resources/:slug" element={<ResourceDetailPage />} />
-        <Route path="/project/:id/case-study" element={<CaseStudyPage />} />
-        <Route path="/project/:id/gallery" element={<ProjectGalleryPage />} />
-        <Route path="/admin/testimonials" element={<AdminTestimonialsPage />} />
-        <Route path="/admin/books" element={<AdminBooksPage />} />
-        <Route path="/admin/projects" element={<AdminProjectsPage />} />
-        <Route path="/admin/resources" element={<AdminResourcesPage />} />
-      </Routes>
-    </Router>
+    <HelmetProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/books" element={<BooksPage />} />
+          <Route path="/resume" element={<ResumePage />} />
+          <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="/resources/:slug" element={<ResourceDetailPage />} />
+          <Route path="/project/:id/case-study" element={<CaseStudyPage />} />
+          <Route path="/project/:id/gallery" element={<ProjectGalleryPage />} />
+          <Route path="/admin/testimonials" element={<AdminTestimonialsPage />} />
+          <Route path="/admin/books" element={<AdminBooksPage />} />
+          <Route path="/admin/projects" element={<AdminProjectsPage />} />
+          <Route path="/admin/resources" element={<AdminResourcesPage />} />
+        </Routes>
+      </Router>
+    </HelmetProvider>
   );
 }
 

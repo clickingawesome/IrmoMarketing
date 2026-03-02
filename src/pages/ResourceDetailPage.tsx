@@ -5,6 +5,7 @@ import { supabase, type Resource } from '../lib/supabase';
 import Header from '../components/Header';
 import SocialShare from '../components/SocialShare';
 import LeadCaptureModal from '../components/LeadCaptureModal';
+import SEO from '../components/SEO';
 
 const ZeroClickCourse = lazy(() => import('./Resources/zero-click-course'));
 const MarketingTitleQuiz = lazy(() => import('./Resources/marketing-title-quiz'));
@@ -110,8 +111,15 @@ export default function ResourceDetailPage() {
   const hasPdfUrl = resource.pdf_url;
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
-      {!hasComponent && <Header />}
+    <>
+      <SEO
+        title={resource.title}
+        description={resource.description}
+        canonical={`https://irmomarketing.com/resources/${resource.slug}`}
+        ogImage={resource.thumbnail_url}
+      />
+      <div className="min-h-screen bg-[#0f0f0f]">
+        {!hasComponent && <Header />}
 
       <div className={hasComponent ? '' : 'pt-28 pb-20'}>
         {!hasComponent && (
@@ -268,5 +276,6 @@ export default function ResourceDetailPage() {
         />
       )}
     </div>
+    </>
   );
 }

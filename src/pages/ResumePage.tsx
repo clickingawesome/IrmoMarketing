@@ -1,9 +1,16 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Mail, Phone, Linkedin, Award, Briefcase, GraduationCap, Download } from 'lucide-react';
+import SEO from '../components/SEO';
 
 export default function ResumePage() {
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
+    <>
+      <SEO
+        title="Resume - Nick Irmo"
+        description="View Nick Irmo's professional resume. Marketing Director with 15+ years experience in channel marketing, digital strategy, and creative direction."
+        canonical="https://irmomarketing.com/resume"
+      />
+      <div className="min-h-screen bg-[#0f0f0f]">
       <div className="bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] py-20">
         <div className="container mx-auto px-6">
           <div className="flex justify-between items-center mb-12 flex-wrap gap-4">
@@ -219,5 +226,6 @@ export default function ResumePage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

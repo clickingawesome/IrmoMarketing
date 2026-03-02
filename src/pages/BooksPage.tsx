@@ -3,6 +3,7 @@ import { ArrowLeft, Info, ShoppingCart, BookOpen, Rocket, Moon, Star, Compass, G
 import { useNavigate } from 'react-router-dom';
 import { supabase, type Book } from '../lib/supabase';
 import Header from '../components/Header';
+import SEO from '../components/SEO';
 import headshotImage from '../assets/images/177973283_10215629675493784_5339630275291513824_n.jpg';
 
 const iconMap: Record<string, any> = {
@@ -92,8 +93,14 @@ export default function BooksPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
-      <Header />
+    <>
+      <SEO
+        title="Books by Nick Irmo"
+        description="Explore marketing books and guides by Nick Irmo. Learn about AI-powered marketing strategies, channel marketing, and digital transformation."
+        canonical="https://irmomarketing.com/books"
+      />
+      <div className="min-h-screen bg-[#0f0f0f]">
+        <Header />
 
       <div className="pt-32 pb-20">
         <div className="container mx-auto px-6 sm:px-8 md:px-12 max-w-7xl">
@@ -470,5 +477,6 @@ export default function BooksPage() {
         </div>
       </footer>
     </div>
+    </>
   );
 }

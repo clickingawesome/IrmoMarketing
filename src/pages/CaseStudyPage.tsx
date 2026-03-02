@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check, Star, Mail } from 'lucide-react';
 import { supabase, type Project, type Testimonial } from '../lib/supabase';
 import Header from '../components/Header';
+import SEO from '../components/SEO';
 
 export default function CaseStudyPage() {
   const { id } = useParams();
@@ -68,8 +69,16 @@ export default function CaseStudyPage() {
   if (!project) return null;
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
-      <Header />
+    <>
+      <SEO
+        title={`${project.title} - Case Study`}
+        description={project.case_study_hero_description || project.description}
+        canonical={`https://irmomarketing.com/project/${id}/case-study`}
+        ogImage={project.image_url}
+        ogType="article"
+      />
+      <div className="min-h-screen bg-[#0f0f0f]">
+        <Header />
 
       <div className="pt-32 pb-20">
         <div className="container mx-auto px-6 max-w-6xl">
@@ -373,5 +382,6 @@ export default function CaseStudyPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

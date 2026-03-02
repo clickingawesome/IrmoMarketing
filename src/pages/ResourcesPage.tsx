@@ -4,6 +4,7 @@ import { ArrowLeft, BookOpen, FileText, HelpCircle, Gamepad2, DollarSign, Layout
 import { supabase, type Resource } from '../lib/supabase';
 import ResourceCard from '../components/ResourceCard';
 import Header from '../components/Header';
+import SEO from '../components/SEO';
 
 const CATEGORIES = [
   { id: 'all', label: 'All Resources', icon: LayoutGrid },
@@ -56,8 +57,14 @@ export default function ResourcesPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
-      <Header />
+    <>
+      <SEO
+        title="Marketing Resources & Tools"
+        description="Free marketing resources, courses, PDFs, quizzes and tools by Nick Irmo. Learn about zero-click marketing, AI strategies, and digital marketing best practices."
+        canonical="https://irmomarketing.com/resources"
+      />
+      <div className="min-h-screen bg-[#0f0f0f]">
+        <Header />
 
       <div className="pt-28 pb-20">
         <div className="container mx-auto px-6 sm:px-8 md:px-12">
@@ -156,5 +163,6 @@ export default function ResourcesPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

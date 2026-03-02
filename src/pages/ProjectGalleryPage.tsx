@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, X } from 'lucide-react';
 import { supabase, type Project } from '../lib/supabase';
 import Header from '../components/Header';
+import SEO from '../components/SEO';
 
 export default function ProjectGalleryPage() {
   const { id } = useParams();
@@ -58,8 +59,15 @@ export default function ProjectGalleryPage() {
   if (!project) return null;
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
-      <Header />
+    <>
+      <SEO
+        title={`${project.title} - Project Gallery`}
+        description={project.description}
+        canonical={`https://irmomarketing.com/project/${id}/gallery`}
+        ogImage={project.gallery_images?.[0] || project.image_url}
+      />
+      <div className="min-h-screen bg-[#0f0f0f]">
+        <Header />
 
       <div className="pt-32 pb-20">
         <div className="container mx-auto px-6 max-w-7xl">
@@ -127,5 +135,6 @@ export default function ProjectGalleryPage() {
         </div>
       )}
     </div>
+    </>
   );
 }
