@@ -223,44 +223,42 @@ export default function Header() {
             </NavButton>
 
             {/* Admin Dropdown */}
-            {isAdmin && (
-              <div className="relative" ref={adminRef}>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsAdminOpen(!isAdminOpen);
-                    setIsCreativeOpen(false);
-                  }}
-                  className={`flex items-center gap-1.5 font-medium transition-colors text-base lg:text-lg ${
-                    isAdminOpen ? 'text-[#F4B400]' : 'text-gray-400 hover:text-gray-200'
-                  }`}
-                >
-                  <Settings size={17} />
-                  Admin
-                  <ChevronDown size={14} className={`transition-transform duration-200 ${isAdminOpen ? 'rotate-180' : ''}`} />
-                </button>
+            <div className="relative" ref={adminRef}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsAdminOpen(!isAdminOpen);
+                  setIsCreativeOpen(false);
+                }}
+                className={`flex items-center gap-1.5 font-medium transition-colors text-base lg:text-lg ${
+                  isAdminOpen ? 'text-[#F4B400]' : 'text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                <Settings size={17} />
+                Admin
+                <ChevronDown size={14} className={`transition-transform duration-200 ${isAdminOpen ? 'rotate-180' : ''}`} />
+              </button>
 
-                <div className={`absolute top-full right-0 pt-3 transition-all duration-200 ${
-                  isAdminOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
-                }`}>
-                  <div className="w-52 bg-[#141414] border border-gray-800/80 rounded-xl shadow-2xl shadow-black/40 overflow-hidden p-1.5">
-                    {adminItems.map((item) => (
-                      <button
-                        key={item.path}
-                        onClick={() => {
-                          navigate(item.path);
-                          setIsAdminOpen(false);
-                        }}
-                        className="w-full text-left px-3.5 py-2.5 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/[0.05] transition-all duration-150 flex items-center justify-between group/admin"
-                      >
-                        {item.label}
-                        <ChevronRight size={14} className="text-gray-600 opacity-0 group-hover/admin:opacity-100 transition-opacity" />
-                      </button>
-                    ))}
-                  </div>
+              <div className={`absolute top-full right-0 pt-3 transition-all duration-200 ${
+                isAdminOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
+              }`}>
+                <div className="w-52 bg-[#141414] border border-gray-800/80 rounded-xl shadow-2xl shadow-black/40 overflow-hidden p-1.5">
+                  {adminItems.map((item) => (
+                    <button
+                      key={item.path}
+                      onClick={() => {
+                        navigate(item.path);
+                        setIsAdminOpen(false);
+                      }}
+                      className="w-full text-left px-3.5 py-2.5 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/[0.05] transition-all duration-150 flex items-center justify-between group/admin"
+                    >
+                      {item.label}
+                      <ChevronRight size={14} className="text-gray-600 opacity-0 group-hover/admin:opacity-100 transition-opacity" />
+                    </button>
+                  ))}
                 </div>
               </div>
-            )}
+            </div>
           </nav>
         </div>
 
@@ -306,28 +304,26 @@ export default function Header() {
             <MobileNavButton onClick={() => scrollToSection('testimonials')}>Testimonials</MobileNavButton>
             <MobileNavButton onClick={() => scrollToSection('contact')}>Contact</MobileNavButton>
 
-            {isAdmin && (
-              <div className="mt-3 pt-3 border-t border-gray-800/60">
-                <div className="flex items-center gap-2 px-3 py-2">
-                  <Settings size={14} className="text-gray-500" />
-                  <span className="text-sm font-bold uppercase tracking-wider text-gray-500">Admin</span>
-                </div>
-                <div className="pl-2 space-y-0.5">
-                  {adminItems.map((item) => (
-                    <button
-                      key={item.path}
-                      onClick={() => {
-                        navigate(item.path);
-                        setIsMenuOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06]"
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
+            <div className="mt-3 pt-3 border-t border-gray-800/60">
+              <div className="flex items-center gap-2 px-3 py-2">
+                <Settings size={14} className="text-gray-500" />
+                <span className="text-sm font-bold uppercase tracking-wider text-gray-500">Admin</span>
               </div>
-            )}
+              <div className="pl-2 space-y-0.5">
+                {adminItems.map((item) => (
+                  <button
+                    key={item.path}
+                    onClick={() => {
+                      navigate(item.path);
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06]"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </nav>
         </div>
       </div>
