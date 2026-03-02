@@ -386,7 +386,6 @@ export default function AdminProjectsPage() {
                         onClick={async () => {
                           const newValue = !project.is_featured;
                           const updatedProject = { ...project, is_featured: newValue };
-                          updateProject(projectIndex, 'is_featured', newValue);
                           await handleSave(updatedProject);
                         }}
                         disabled={saving}
