@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
-import { Menu, X, Settings } from 'lucide-react';
+import { Menu, X, Settings, ChevronDown } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isCreativeOpen, setIsCreativeOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const adminRef = useRef<HTMLDivElement>(null);
+  const creativeRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -15,6 +17,9 @@ export default function Header() {
     function handleClickOutside(event: MouseEvent) {
       if (adminRef.current && !adminRef.current.contains(event.target as Node)) {
         setIsAdminOpen(false);
+      }
+      if (creativeRef.current && !creativeRef.current.contains(event.target as Node)) {
+        setIsCreativeOpen(false);
       }
     }
 
@@ -78,6 +83,7 @@ export default function Header() {
               onClick={() => {
                 scrollToSection('about');
                 setIsAdminOpen(false);
+                setIsCreativeOpen(false);
               }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
@@ -87,42 +93,102 @@ export default function Header() {
               onClick={() => {
                 scrollToSection('services');
                 setIsAdminOpen(false);
+                setIsCreativeOpen(false);
               }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
               Services
             </button>
-            <button
-              onClick={() => {
-                scrollToSection('portfolio');
-                setIsAdminOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
-            >
-              Portfolio
-            </button>
-            <button
-              onClick={() => {
-                scrollToSection('books');
-                setIsAdminOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
-            >
-              Books
-            </button>
-            <button
-              onClick={() => {
-                navigate('/music');
-                setIsAdminOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
-            >
-              Music
-            </button>
+            <div className="relative" ref={creativeRef}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsCreativeOpen(!isCreativeOpen);
+                  setIsAdminOpen(false);
+                }}
+                className="flex items-center gap-2 text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
+              >
+                Creative
+                <ChevronDown size={18} className={`transition-transform ${isCreativeOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isCreativeOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[600px] bg-[#1a1a1a] border border-gray-800 rounded-lg shadow-2xl overflow-hidden">
+                  <div className="grid grid-cols-2 gap-6 p-6">
+                    <div>
+                      <h3 className="text-[#F4B400] font-bold text-sm uppercase tracking-wide mb-3">Portfolio</h3>
+                      <button
+                        onClick={() => {
+                          scrollToSection('portfolio');
+                          setIsCreativeOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
+                      >
+                        Featured Projects
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigate('/projects');
+                          setIsCreativeOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
+                      >
+                        Full Gallery
+                      </button>
+                    </div>
+                    <div>
+                      <h3 className="text-[#F4B400] font-bold text-sm uppercase tracking-wide mb-3">Books</h3>
+                      <button
+                        onClick={() => {
+                          scrollToSection('books');
+                          setIsCreativeOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
+                      >
+                        Featured Books
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigate('/books');
+                          setIsCreativeOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
+                      >
+                        All Books
+                      </button>
+                    </div>
+                    <div>
+                      <h3 className="text-[#F4B400] font-bold text-sm uppercase tracking-wide mb-3">Music</h3>
+                      <button
+                        onClick={() => {
+                          navigate('/music');
+                          setIsCreativeOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
+                      >
+                        Browse Music
+                      </button>
+                    </div>
+                    <div>
+                      <h3 className="text-[#F4B400] font-bold text-sm uppercase tracking-wide mb-3">Resources</h3>
+                      <button
+                        onClick={() => {
+                          navigate('/resources');
+                          setIsCreativeOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-white hover:text-[#F4B400] transition-colors"
+                      >
+                        Free Downloads
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
             <button
               onClick={() => {
                 scrollToSection('testimonials');
                 setIsAdminOpen(false);
+                setIsCreativeOpen(false);
               }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
@@ -132,19 +198,11 @@ export default function Header() {
               onClick={() => {
                 scrollToSection('contact');
                 setIsAdminOpen(false);
+                setIsCreativeOpen(false);
               }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
               Contact
-            </button>
-            <button
-              onClick={() => {
-                navigate('/resources');
-                setIsAdminOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
-            >
-              Resources
             </button>
             <div className="relative" ref={adminRef}>
               <button
@@ -224,27 +282,81 @@ export default function Header() {
             >
               Services
             </button>
-            <button
-              onClick={() => scrollToSection('portfolio')}
-              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
-            >
-              Portfolio
-            </button>
-            <button
-              onClick={() => scrollToSection('books')}
-              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
-            >
-              Books
-            </button>
-            <button
-              onClick={() => {
-                navigate('/music');
-                setIsMenuOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
-            >
-              Music
-            </button>
+
+            <div className="border-t border-gray-800 pt-4">
+              <div className="flex items-center gap-2 text-[#F4B400] mb-3">
+                <span className="text-xl font-semibold">Creative</span>
+              </div>
+              <div className="pl-4 space-y-3">
+                <div>
+                  <p className="text-gray-400 text-sm mb-2">Portfolio</p>
+                  <button
+                    onClick={() => {
+                      scrollToSection('portfolio');
+                      setIsMenuOpen(false);
+                    }}
+                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block mb-2"
+                  >
+                    Featured Projects
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/projects');
+                      setIsMenuOpen(false);
+                    }}
+                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block"
+                  >
+                    Full Gallery
+                  </button>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-2">Books</p>
+                  <button
+                    onClick={() => {
+                      scrollToSection('books');
+                      setIsMenuOpen(false);
+                    }}
+                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block mb-2"
+                  >
+                    Featured Books
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/books');
+                      setIsMenuOpen(false);
+                    }}
+                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block"
+                  >
+                    All Books
+                  </button>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-2">Music</p>
+                  <button
+                    onClick={() => {
+                      navigate('/music');
+                      setIsMenuOpen(false);
+                    }}
+                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block"
+                  >
+                    Browse Music
+                  </button>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-2">Resources</p>
+                  <button
+                    onClick={() => {
+                      navigate('/resources');
+                      setIsMenuOpen(false);
+                    }}
+                    className="text-white hover:text-[#F4B400] transition-colors text-left text-base block"
+                  >
+                    Free Downloads
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <button
               onClick={() => scrollToSection('testimonials')}
               className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
@@ -256,15 +368,6 @@ export default function Header() {
               className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
             >
               Contact
-            </button>
-            <button
-              onClick={() => {
-                navigate('/resources');
-                setIsMenuOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
-            >
-              Resources
             </button>
             <div className="border-t border-gray-800 pt-6">
               <div className="flex items-center gap-2 text-gray-400 mb-3">
