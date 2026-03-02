@@ -112,6 +112,15 @@ export default function Header() {
             </button>
             <button
               onClick={() => {
+                navigate('/music');
+                setIsAdminOpen(false);
+              }}
+              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
+            >
+              Music
+            </button>
+            <button
+              onClick={() => {
                 scrollToSection('testimonials');
                 setIsAdminOpen(false);
               }}
@@ -136,15 +145,6 @@ export default function Header() {
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
               Resources
-            </button>
-            <button
-              onClick={() => {
-                navigate('/music');
-                setIsAdminOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
-            >
-              Music
             </button>
             <div className="relative" ref={adminRef}>
               <button
@@ -237,6 +237,15 @@ export default function Header() {
               Books
             </button>
             <button
+              onClick={() => {
+                navigate('/music');
+                setIsMenuOpen(false);
+              }}
+              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
+            >
+              Music
+            </button>
+            <button
               onClick={() => scrollToSection('testimonials')}
               className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
             >
@@ -256,15 +265,6 @@ export default function Header() {
               className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
             >
               Resources
-            </button>
-            <button
-              onClick={() => {
-                navigate('/music');
-                setIsMenuOpen(false);
-              }}
-              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
-            >
-              Music
             </button>
             <div className="border-t border-gray-800 pt-6">
               <div className="flex items-center gap-2 text-gray-400 mb-3">
