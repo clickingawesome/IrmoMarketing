@@ -75,56 +75,83 @@ export default function Header() {
 
           <nav className="hidden md:flex items-center gap-8 lg:gap-12">
             <button
-              onClick={() => scrollToSection('about')}
+              onClick={() => {
+                scrollToSection('about');
+                setIsAdminOpen(false);
+              }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
               About
             </button>
             <button
-              onClick={() => scrollToSection('services')}
+              onClick={() => {
+                scrollToSection('services');
+                setIsAdminOpen(false);
+              }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
               Services
             </button>
             <button
-              onClick={() => scrollToSection('portfolio')}
+              onClick={() => {
+                scrollToSection('portfolio');
+                setIsAdminOpen(false);
+              }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
               Portfolio
             </button>
             <button
-              onClick={() => scrollToSection('books')}
+              onClick={() => {
+                scrollToSection('books');
+                setIsAdminOpen(false);
+              }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
               Books
             </button>
             <button
-              onClick={() => scrollToSection('testimonials')}
+              onClick={() => {
+                scrollToSection('testimonials');
+                setIsAdminOpen(false);
+              }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
               Testimonials
             </button>
             <button
-              onClick={() => scrollToSection('contact')}
+              onClick={() => {
+                scrollToSection('contact');
+                setIsAdminOpen(false);
+              }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
               Contact
             </button>
             <button
-              onClick={() => navigate('/resources')}
+              onClick={() => {
+                navigate('/resources');
+                setIsAdminOpen(false);
+              }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
               Resources
             </button>
             <button
-              onClick={() => navigate('/music')}
+              onClick={() => {
+                navigate('/music');
+                setIsAdminOpen(false);
+              }}
               className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
             >
               Music
             </button>
             <div className="relative" ref={adminRef}>
               <button
-                onClick={() => setIsAdminOpen(!isAdminOpen)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsAdminOpen(!isAdminOpen);
+                }}
                 className="flex items-center gap-2 text-white hover:text-[#F4B400] transition-colors text-xl"
               >
                 <Settings size={20} />
