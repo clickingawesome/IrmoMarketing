@@ -5,6 +5,7 @@ import BooksPage from './pages/BooksPage';
 import ResumePage from './pages/ResumePage';
 import CaseStudyPage from './pages/CaseStudyPage';
 import ProjectGalleryPage from './pages/ProjectGalleryPage';
+import AllProjectsPage from './pages/AllProjectsPage';
 import ResourcesPage from './pages/ResourcesPage';
 import ResourceDetailPage from './pages/ResourceDetailPage';
 import MusicPage from './pages/MusicPage';
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/books" element={<BooksPage />} />
+          <Route path="/projects" element={<AllProjectsPage />} />
           <Route path="/resume" element={<ResumePage />} />
           <Route path="/resources" element={<ResourcesPage />} />
           <Route path="/resources/:slug" element={<ResourceDetailPage />} />
