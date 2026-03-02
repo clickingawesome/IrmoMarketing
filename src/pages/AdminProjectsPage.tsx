@@ -361,19 +361,40 @@ export default function AdminProjectsPage() {
                       <p className="text-gray-400">{project.category}</p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => handleSave(project)}
-                    disabled={saving}
-                    className="flex items-center gap-2 bg-[#F4B400] hover:bg-[#d99f00] text-black font-semibold px-6 py-3 rounded-lg transition-colors disabled:opacity-50"
-                  >
-                    <Save size={20} />
-                    {saving ? 'Saving...' : 'Save'}
-                  </button>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className={`text-sm font-semibold ${project.is_featured ? 'text-green-400' : 'text-gray-500'}`}>
+                        {project.is_featured ? 'Visible on Site' : 'Hidden from Site'}
+                      </span>
+                      <button
+                        onClick={() => {
+                          updateProject(projectIndex, 'is_featured', !project.is_featured);
+                          handleSave({ ...project, is_featured: !project.is_featured });
+                        }}
+                        className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#F4B400] focus:ring-offset-2 focus:ring-offset-[#1a1a1a] ${
+                          project.is_featured ? 'bg-green-500' : 'bg-gray-600'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                            project.is_featured ? 'translate-x-7' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => handleSave(project)}
+                      disabled={saving}
+                      className="flex items-center gap-2 bg-[#F4B400] hover:bg-[#d99f00] text-black font-semibold px-6 py-3 rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      <Save size={20} />
+                      {saving ? 'Saving...' : 'Save'}
+                    </button>
+                  </div>
                 </div>
 
                 {expandedProjects.has(projectIndex) && (
                   <div className="space-y-8">
-                    <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-gray-300 mb-2 font-semibold">View Type</label>
                       <select
@@ -386,17 +407,6 @@ export default function AdminProjectsPage() {
                         <option value="external_link">External Link</option>
                       </select>
                     </div>
-
-                    <div>
-                      <label className="block text-gray-300 mb-2 font-semibold">Is Featured</label>
-                      <input
-                        type="checkbox"
-                        checked={project.is_featured}
-                        onChange={(e) => updateProject(projectIndex, 'is_featured', e.target.checked)}
-                        className="w-6 h-6 accent-[#F4B400]"
-                      />
-                    </div>
-                  </div>
 
                   {project.view_type === 'external_link' ? (
                     <div className="border-t border-gray-800 pt-8">
