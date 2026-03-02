@@ -53,25 +53,36 @@ export default function AdminProjectsPage() {
     try {
       setSaving(true);
 
-      // Only send the fields we want to update (exclude computed fields)
-      const { id, title, category, description, image, tags, order_index, view_type,
-              case_study_hero_description, impact_metrics, challenge_title, challenge_description,
-              challenge_points, solution_title, solution_description, solution_points,
-              before_image, after_image, testimonial_id, cta_title, cta_description,
-              gallery_images, external_link, is_featured } = project;
-
       const updateData = {
-        title, category, description, image, tags, order_index, view_type,
-        case_study_hero_description, impact_metrics, challenge_title, challenge_description,
-        challenge_points, solution_title, solution_description, solution_points,
-        before_image, after_image, testimonial_id, cta_title, cta_description,
-        gallery_images, external_link, is_featured
+        title: project.title,
+        category: project.category,
+        description: project.description,
+        image_url: project.image_url,
+        tags: project.tags,
+        order_index: project.order_index,
+        view_type: project.view_type,
+        case_study_hero_description: project.case_study_hero_description,
+        impact_metrics: project.impact_metrics,
+        challenge_title: project.challenge_title,
+        challenge_description: project.challenge_description,
+        challenge_points: project.challenge_points,
+        solution_title: project.solution_title,
+        solution_description: project.solution_description,
+        solution_points: project.solution_points,
+        before_image: project.before_image,
+        after_image: project.after_image,
+        testimonial_id: project.testimonial_id,
+        cta_title: project.cta_title,
+        cta_description: project.cta_description,
+        gallery_images: project.gallery_images,
+        external_link: project.external_link,
+        is_featured: project.is_featured
       };
 
       const { error } = await supabase
         .from('projects')
         .update(updateData)
-        .eq('id', id);
+        .eq('id', project.id);
 
       if (error) throw error;
       showMessage('success', 'Project updated successfully');
