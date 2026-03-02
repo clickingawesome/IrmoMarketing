@@ -138,11 +138,11 @@ export default function MusicPage() {
               <div className="relative pt-[56.25%] bg-black rounded-lg overflow-hidden">
                 <iframe
                   className="absolute inset-0 w-full h-full"
-                  src={`https://www.youtube.com/embed/${selectedTrack.youtube_id}?autoplay=1&enablejsapi=1&origin=${window.location.origin}`}
+                  src={`https://www.youtube-nocookie.com/embed/${selectedTrack.youtube_id}?autoplay=1&rel=0`}
                   title={selectedTrack.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
-                  referrerPolicy="strict-origin-when-cross-origin"
+                  frameBorder="0"
                 ></iframe>
               </div>
               <div className="mt-4 text-white">
@@ -150,6 +150,14 @@ export default function MusicPage() {
                 {selectedTrack.description && (
                   <p className="text-gray-300">{selectedTrack.description}</p>
                 )}
+                <a
+                  href={`https://www.youtube.com/watch?v=${selectedTrack.youtube_id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mt-3 text-red-500 hover:text-red-400 underline"
+                >
+                  Watch on YouTube
+                </a>
               </div>
             </div>
           </div>
