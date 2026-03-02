@@ -7,10 +7,12 @@ import CaseStudyPage from './pages/CaseStudyPage';
 import ProjectGalleryPage from './pages/ProjectGalleryPage';
 import ResourcesPage from './pages/ResourcesPage';
 import ResourceDetailPage from './pages/ResourceDetailPage';
+import MusicPage from './pages/MusicPage';
 import AdminTestimonialsPage from './pages/AdminTestimonialsPage';
 import AdminBooksPage from './pages/AdminBooksPage';
 import AdminProjectsPage from './pages/AdminProjectsPage';
 import AdminResourcesPage from './pages/AdminResourcesPage';
+import AdminMusicPage from './pages/AdminMusicPage';
 
 function App() {
   return (
@@ -22,12 +24,14 @@ function App() {
           <Route path="/resume" element={<ResumePage />} />
           <Route path="/resources" element={<ResourcesPage />} />
           <Route path="/resources/:slug" element={<ResourceDetailPage />} />
+          <Route path="/music" element={<MusicPage />} />
           <Route path="/project/:id/case-study" element={<CaseStudyPage />} />
           <Route path="/project/:id/gallery" element={<ProjectGalleryPage />} />
           <Route path="/admin/testimonials" element={<AdminTestimonialsPage />} />
           <Route path="/admin/books" element={<AdminBooksPage />} />
           <Route path="/admin/projects" element={<AdminProjectsPage />} />
           <Route path="/admin/resources" element={<AdminResourcesPage />} />
+          <Route path="/admin/music" element={<AdminMusicPage />} />
         </Routes>
       </Router>
     </HelmetProvider>

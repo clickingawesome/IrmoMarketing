@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { MessageSquare, Book, Folder, Home, LayoutGrid } from 'lucide-react';
+import { MessageSquare, Book, Folder, Home, LayoutGrid, Music } from 'lucide-react';
 
 export default function AdminNav() {
   const location = useLocation();
@@ -10,6 +10,7 @@ export default function AdminNav() {
     { path: '/admin/books', label: 'Books', icon: Book },
     { path: '/admin/projects', label: 'Projects', icon: Folder },
     { path: '/admin/resources', label: 'Resources', icon: LayoutGrid },
+    { path: '/admin/music', label: 'Music', icon: Music },
   ];
 
   return (

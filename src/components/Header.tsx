@@ -116,6 +116,12 @@ export default function Header() {
             >
               Resources
             </button>
+            <button
+              onClick={() => navigate('/music')}
+              className="text-white hover:text-[#F4B400] transition-colors text-lg lg:text-xl"
+            >
+              Music
+            </button>
             <div className="relative" ref={adminRef}>
               <button
                 onClick={() => setIsAdminOpen(!isAdminOpen)}
@@ -161,6 +167,15 @@ export default function Header() {
                     className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
                   >
                     Manage Resources
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/admin/music');
+                      setIsAdminOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-3 text-white hover:bg-[#F4B400] hover:text-black transition-colors"
+                  >
+                    Manage Music
                   </button>
                 </div>
               )}
@@ -215,6 +230,15 @@ export default function Header() {
             >
               Resources
             </button>
+            <button
+              onClick={() => {
+                navigate('/music');
+                setIsMenuOpen(false);
+              }}
+              className="text-white hover:text-[#F4B400] transition-colors text-left text-lg sm:text-xl"
+            >
+              Music
+            </button>
             <div className="border-t border-gray-800 pt-6">
               <div className="flex items-center gap-2 text-gray-400 mb-3">
                 <Settings size={20} />
@@ -252,9 +276,18 @@ export default function Header() {
                   navigate('/admin/resources');
                   setIsMenuOpen(false);
                 }}
-                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl pl-4 block"
+                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl mb-3 pl-4 block"
               >
                 Manage Resources
+              </button>
+              <button
+                onClick={() => {
+                  navigate('/admin/music');
+                  setIsMenuOpen(false);
+                }}
+                className="text-white hover:text-[#F4B400] transition-colors text-left text-xl pl-4 block"
+              >
+                Manage Music
               </button>
             </div>
           </nav>
