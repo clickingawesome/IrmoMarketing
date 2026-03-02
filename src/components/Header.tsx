@@ -44,6 +44,8 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isCreativeOpen, setIsCreativeOpen] = useState(false);
+  const [isMobileCreativeOpen, setIsMobileCreativeOpen] = useState(false);
+  const [isMobileAdminOpen, setIsMobileAdminOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const adminRef = useRef<HTMLDivElement>(null);
@@ -270,34 +272,36 @@ export default function Header() {
             <MobileNavButton onClick={() => scrollToSection('about')}>About</MobileNavButton>
             <MobileNavButton onClick={() => scrollToSection('services')}>Services</MobileNavButton>
 
-            <div className="mt-2 mb-1">
-              <div className="flex items-center gap-2 px-3 py-2">
-                <div className="w-1 h-4 bg-[#F4B400] rounded-full" />
-                <span className="text-sm font-bold uppercase tracking-wider text-[#F4B400]">Creative</span>
-              </div>
-              <div className="pl-2 space-y-0.5">
-                {creativeItems.map((group) => (
-                  <div key={group.category}>
-                    <div className="px-4 py-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-600">{group.category}</span>
+            <button
+              onClick={() => setIsMobileCreativeOpen(!isMobileCreativeOpen)}
+              className="text-left px-3 py-2.5 text-lg font-medium text-white hover:text-[#F4B400] rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06] flex items-center justify-between"
+            >
+              Creative
+              <ChevronDown size={18} className={`text-gray-500 transition-transform duration-200 ${isMobileCreativeOpen ? 'rotate-180' : ''}`} />
+            </button>
+            <div className={`overflow-hidden transition-all duration-300 ${isMobileCreativeOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="pl-3 pr-1 pb-2 space-y-0.5">
+                {creativeItems.flatMap((group) => group.items).map((item) => (
+                  <button
+                    key={item.label}
+                    onClick={() => handleCreativeAction(item.action)}
+                    className="w-full text-left px-3 py-2.5 flex items-center gap-3 rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06]"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-[#F4B400]/[0.08] flex items-center justify-center shrink-0">
+                      <item.icon size={15} className="text-[#F4B400]" />
                     </div>
-                    {group.items.map((item) => (
-                      <button
-                        key={item.label}
-                        onClick={() => handleCreativeAction(item.action)}
-                        className="w-full text-left px-4 py-2.5 flex items-center gap-3 rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06]"
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-[#F4B400]/[0.08] flex items-center justify-center shrink-0">
-                          <item.icon size={15} className="text-[#F4B400]" />
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-white">{item.label}</div>
-                          <div className="text-[11px] text-gray-500">{item.description}</div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+                    <span className="text-sm font-medium text-gray-300">{item.label}</span>
+                  </button>
                 ))}
+                <button
+                  onClick={() => { navigate('/resume'); setIsMenuOpen(false); }}
+                  className="w-full text-left px-3 py-2.5 flex items-center gap-3 rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06]"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-[#F4B400]/[0.08] flex items-center justify-center shrink-0">
+                    <Briefcase size={15} className="text-[#F4B400]" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-300">Resume</span>
+                </button>
               </div>
             </div>
 
@@ -305,23 +309,31 @@ export default function Header() {
             <MobileNavButton onClick={() => scrollToSection('contact')}>Contact</MobileNavButton>
 
             <div className="mt-3 pt-3 border-t border-gray-800/60">
-              <div className="flex items-center gap-2 px-3 py-2">
-                <Settings size={14} className="text-gray-500" />
-                <span className="text-sm font-bold uppercase tracking-wider text-gray-500">Admin</span>
-              </div>
-              <div className="pl-2 space-y-0.5">
-                {adminItems.map((item) => (
-                  <button
-                    key={item.path}
-                    onClick={() => {
-                      navigate(item.path);
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06]"
-                  >
-                    {item.label}
-                  </button>
-                ))}
+              <button
+                onClick={() => setIsMobileAdminOpen(!isMobileAdminOpen)}
+                className="w-full text-left px-3 py-2.5 flex items-center justify-between rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06]"
+              >
+                <div className="flex items-center gap-2">
+                  <Settings size={14} className="text-gray-500" />
+                  <span className="text-sm font-bold uppercase tracking-wider text-gray-500">Admin</span>
+                </div>
+                <ChevronDown size={16} className={`text-gray-500 transition-transform duration-200 ${isMobileAdminOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <div className={`overflow-hidden transition-all duration-300 ${isMobileAdminOpen ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div className="pl-4 space-y-0.5 pt-1">
+                  {adminItems.map((item) => (
+                    <button
+                      key={item.path}
+                      onClick={() => {
+                        navigate(item.path);
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white rounded-lg hover:bg-white/[0.03] transition-colors active:bg-white/[0.06]"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </nav>
