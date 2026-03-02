@@ -52,10 +52,26 @@ export default function AdminProjectsPage() {
   async function handleSave(project: Project) {
     try {
       setSaving(true);
+
+      // Only send the fields we want to update (exclude computed fields)
+      const { id, title, category, description, image, tags, order_index, view_type,
+              case_study_hero_description, impact_metrics, challenge_title, challenge_description,
+              challenge_points, solution_title, solution_description, solution_points,
+              before_image, after_image, testimonial_id, cta_title, cta_description,
+              gallery_images, external_link, is_featured } = project;
+
+      const updateData = {
+        title, category, description, image, tags, order_index, view_type,
+        case_study_hero_description, impact_metrics, challenge_title, challenge_description,
+        challenge_points, solution_title, solution_description, solution_points,
+        before_image, after_image, testimonial_id, cta_title, cta_description,
+        gallery_images, external_link, is_featured
+      };
+
       const { error } = await supabase
         .from('projects')
-        .update(project)
-        .eq('id', project.id);
+        .update(updateData)
+        .eq('id', id);
 
       if (error) throw error;
       showMessage('success', 'Project updated successfully');
