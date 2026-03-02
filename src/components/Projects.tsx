@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Folder, ExternalLink } from 'lucide-react';
+import { Folder, ExternalLink, ArrowRight } from 'lucide-react';
 import { supabase, type Project } from '../lib/supabase';
 
 export default function Projects() {
@@ -108,6 +108,16 @@ export default function Projects() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="text-center mt-12 sm:mt-16">
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-[#F4B400] text-black font-semibold text-lg rounded-lg hover:bg-[#e0a800] transition-all duration-300 hover:gap-4"
+          >
+            View All Projects
+            <ArrowRight size={20} />
+          </Link>
         </div>
       </div>
     </section>
