@@ -217,7 +217,7 @@ export default function Header() {
               </div>
             </div>
 
-            <NavButton onClick={() => { scrollToSection('testimonials'); setIsAdminOpen(false); setIsCreativeOpen(false); }}>
+            <NavButton onClick={() => { navigate('/testimonials'); setIsAdminOpen(false); setIsCreativeOpen(false); }}>
               Testimonials
             </NavButton>
             <NavButton onClick={() => { scrollToSection('contact'); setIsAdminOpen(false); setIsCreativeOpen(false); }}>
@@ -305,7 +305,7 @@ export default function Header() {
               </div>
             </div>
 
-            <MobileNavButton onClick={() => scrollToSection('testimonials')}>Testimonials</MobileNavButton>
+            <MobileNavButton onClick={() => { navigate('/testimonials'); setIsMenuOpen(false); }}>Testimonials</MobileNavButton>
             <MobileNavButton onClick={() => scrollToSection('contact')}>Contact</MobileNavButton>
 
             <div className="mt-3 pt-3 border-t border-gray-800/60">

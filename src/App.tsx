@@ -14,6 +14,7 @@ import AdminBooksPage from './pages/AdminBooksPage';
 import AdminProjectsPage from './pages/AdminProjectsPage';
 import AdminResourcesPage from './pages/AdminResourcesPage';
 import AdminMusicPage from './pages/AdminMusicPage';
+import TestimonialsPage from './pages/TestimonialsPage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/books" element={<BooksPage />} />
           <Route path="/projects" element={<AllProjectsPage />} />
+          <Route path="/testimonials" element={<TestimonialsPage />} />
           <Route path="/resume" element={<ResumePage />} />
           <Route path="/resources" element={<ResourcesPage />} />
           <Route path="/resources/:slug" element={<ResourceDetailPage />} />

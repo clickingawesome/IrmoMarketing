@@ -72,6 +72,7 @@ export type Testimonial = {
   client_avatar: string | null;
   rating: number;
   content: string;
+  show_on_homepage: boolean;
   order_index: number;
   created_at: string;
 };

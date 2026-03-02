@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase, type Testimonial } from '../lib/supabase';
-import { Upload, Trash2, Star, User } from 'lucide-react';
+import { Upload, Trash2, Star, User, Home } from 'lucide-react';
 import ImageCropper from '../components/ImageCropper';
 import AdminNav from '../components/AdminNav';
 
@@ -13,6 +13,7 @@ export default function AdminTestimonialsPage() {
     client_role: '',
     rating: 5,
     content: '',
+    show_on_homepage: false,
   });
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>('');
@@ -114,6 +115,7 @@ export default function AdminTestimonialsPage() {
         client_role: '',
         rating: 5,
         content: '',
+        show_on_homepage: false,
       });
       setAvatarFile(null);
       setAvatarPreview('');
@@ -124,6 +126,21 @@ export default function AdminTestimonialsPage() {
       alert('Error adding testimonial. Please try again.');
     } finally {
       setUploading(false);
+    }
+  };
+
+  const toggleHomepage = async (id: string, current: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('testimonials')
+        .update({ show_on_homepage: !current })
+        .eq('id', id);
+
+      if (error) throw error;
+      await fetchTestimonials();
+    } catch (error) {
+      console.error('Error toggling homepage visibility:', error);
+      alert('Error updating testimonial. Please try again.');
     }
   };
 
@@ -264,6 +281,22 @@ export default function AdminTestimonialsPage() {
                 />
               </div>
 
+              <div>
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <div
+                    className={`w-11 h-6 rounded-full transition-colors relative ${
+                      formData.show_on_homepage ? 'bg-[#F4B400]' : 'bg-gray-700'
+                    }`}
+                    onClick={() => setFormData({ ...formData, show_on_homepage: !formData.show_on_homepage })}
+                  >
+                    <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+                      formData.show_on_homepage ? 'translate-x-5' : ''
+                    }`} />
+                  </div>
+                  <span className="text-gray-300 group-hover:text-white transition-colors">Show on Homepage</span>
+                </label>
+              </div>
+
               <button
                 type="submit"
                 disabled={uploading}
@@ -316,12 +349,25 @@ export default function AdminTestimonialsPage() {
                           ))}
                         </div>
                       </div>
-                      <button
-                        onClick={() => handleDelete(testimonial.id)}
-                        className="text-red-500 hover:text-red-400 transition-colors"
-                      >
-                        <Trash2 size={20} />
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => toggleHomepage(testimonial.id, testimonial.show_on_homepage)}
+                          className={`p-1.5 rounded-lg transition-colors ${
+                            testimonial.show_on_homepage
+                              ? 'text-[#F4B400] bg-[#F4B400]/10 hover:bg-[#F4B400]/20'
+                              : 'text-gray-600 hover:text-gray-400 hover:bg-gray-800'
+                          }`}
+                          title={testimonial.show_on_homepage ? 'Shown on homepage' : 'Hidden from homepage'}
+                        >
+                          <Home size={18} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(testimonial.id)}
+                          className="text-red-500 hover:text-red-400 transition-colors p-1.5"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     </div>
                     <p className="text-gray-300 text-sm leading-relaxed">{testimonial.content}</p>
                   </div>
