@@ -87,6 +87,8 @@ export default function MusicPage() {
       <SEO
         title="Music & DJ Mixes - DJ Big Dill"
         description="Check out the latest DJ mixes and music productions by DJ Big Dill. Watch videos and listen to tracks on YouTube."
+        canonical="https://irmomarketing.com/music"
+        canonical="https://irmomarketing.com/music"
         structuredData={buildMusicPageSchema()}
       />
       <Header />
