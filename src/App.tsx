@@ -15,6 +15,9 @@ import AdminProjectsPage from './pages/AdminProjectsPage';
 import AdminResourcesPage from './pages/AdminResourcesPage';
 import AdminMusicPage from './pages/AdminMusicPage';
 import TestimonialsPage from './pages/TestimonialsPage';
+import LoginPage from './pages/LoginPage';
+import NotFoundPage from './pages/NotFoundPage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -31,11 +34,13 @@ function App() {
           <Route path="/music" element={<MusicPage />} />
           <Route path="/project/:id/case-study" element={<CaseStudyPage />} />
           <Route path="/project/:id/gallery" element={<ProjectGalleryPage />} />
-          <Route path="/admin/testimonials" element={<AdminTestimonialsPage />} />
-          <Route path="/admin/books" element={<AdminBooksPage />} />
-          <Route path="/admin/projects" element={<AdminProjectsPage />} />
-          <Route path="/admin/resources" element={<AdminResourcesPage />} />
-          <Route path="/admin/music" element={<AdminMusicPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/admin/testimonials" element={<ProtectedRoute><AdminTestimonialsPage /></ProtectedRoute>} />
+          <Route path="/admin/books" element={<ProtectedRoute><AdminBooksPage /></ProtectedRoute>} />
+          <Route path="/admin/projects" element={<ProtectedRoute><AdminProjectsPage /></ProtectedRoute>} />
+          <Route path="/admin/resources" element={<ProtectedRoute><AdminResourcesPage /></ProtectedRoute>} />
+          <Route path="/admin/music" element={<ProtectedRoute><AdminMusicPage /></ProtectedRoute>} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
     </HelmetProvider>
