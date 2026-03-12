@@ -17,6 +17,7 @@ import AdminMusicPage from './pages/AdminMusicPage';
 import TestimonialsPage from './pages/TestimonialsPage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ThankYouPage from './pages/ThankYouPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path="/music" element={<MusicPage />} />
           <Route path="/project/:id/case-study" element={<CaseStudyPage />} />
           <Route path="/project/:id/gallery" element={<ProjectGalleryPage />} />
+          <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/admin/testimonials" element={<ProtectedRoute><AdminTestimonialsPage /></ProtectedRoute>} />
           <Route path="/admin/books" element={<ProtectedRoute><AdminBooksPage /></ProtectedRoute>} />

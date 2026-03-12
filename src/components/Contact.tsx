@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Mail, Phone, MapPin, Linkedin } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -10,8 +11,8 @@ export default function Contact() {
     message: '',
   });
   const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,9 +41,8 @@ export default function Contact() {
         console.error('Failed to send email notification:', errorData);
       }
 
-      setSubmitted(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setSubmitted(false), 5000);
+      navigate('/thank-you');
     } catch (err) {
       setError('Failed to send message. Please try again.');
       console.error('Error submitting form:', err);
@@ -180,12 +180,6 @@ export default function Contact() {
 
               {error && (
                 <p className="text-red-500 text-base">{error}</p>
-              )}
-
-              {submitted && (
-                <p className="text-[#F4B400] text-base">
-                  Message sent successfully! I'll get back to you soon.
-                </p>
               )}
 
               <button
