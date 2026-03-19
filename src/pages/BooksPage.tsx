@@ -99,6 +99,7 @@ export default function BooksPage() {
         title="Books by Nick Irmo"
         description="Explore marketing books and guides by Nick Irmo. Learn about AI-powered marketing strategies, channel marketing, and digital transformation."
         canonical="https://irmomarketing.com/books"
+        ogImage={featuredBook?.featured_image || featuredBook?.cover_image_vertical || undefined}
         structuredData={buildBooksPageSchema()}
       />
       <div className="min-h-screen bg-[#0f0f0f]">
