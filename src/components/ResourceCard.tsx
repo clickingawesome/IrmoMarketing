@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, FileText, HelpCircle, Gamepad2, DollarSign, ArrowRight, Lock } from 'lucide-react';
+import { BookOpen, FileText, HelpCircle, Gamepad2, DollarSign, ArrowRight, Lock, Newspaper } from 'lucide-react';
 import type { Resource } from '../lib/supabase';
 import SocialShare from './SocialShare';
 
@@ -9,6 +9,7 @@ const CATEGORY_CONFIG: Record<string, { icon: typeof BookOpen; label: string; co
   quiz: { icon: HelpCircle, label: 'Quiz', color: 'text-amber-400', bg: 'bg-amber-400/10 border-amber-400/20' },
   app: { icon: Gamepad2, label: 'Interactive', color: 'text-rose-400', bg: 'bg-rose-400/10 border-rose-400/20' },
   paid: { icon: DollarSign, label: 'Premium', color: 'text-[#F4B400]', bg: 'bg-[#F4B400]/10 border-[#F4B400]/20' },
+  article: { icon: Newspaper, label: 'Article', color: 'text-violet-400', bg: 'bg-violet-400/10 border-violet-400/20' },
 };
 
 export { CATEGORY_CONFIG };

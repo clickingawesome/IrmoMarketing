@@ -83,11 +83,12 @@ export type Resource = {
   slug: string;
   description: string;
   long_description: string | null;
-  category: 'course' | 'pdf' | 'quiz' | 'app' | 'paid';
+  category: 'course' | 'pdf' | 'quiz' | 'app' | 'paid' | 'article';
   thumbnail_url: string | null;
   component_path: string | null;
   pdf_url: string | null;
   external_url: string | null;
+  body: string | null;
   is_free: boolean;
   price: number;
   is_published: boolean;

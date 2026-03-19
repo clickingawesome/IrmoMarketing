@@ -16,6 +16,7 @@ const EMPTY_RESOURCE: ResourceFormData = {
   component_path: null,
   pdf_url: null,
   external_url: null,
+  body: null,
   is_free: true,
   price: 0,
   is_published: true,
@@ -91,6 +92,7 @@ export default function AdminResourcesPage() {
       component_path: resource.component_path,
       pdf_url: resource.pdf_url,
       external_url: resource.external_url,
+      body: resource.body,
       is_free: resource.is_free,
       price: resource.price,
       is_published: resource.is_published,
@@ -309,6 +311,22 @@ export default function AdminResourcesPage() {
                   />
                 </div>
 
+                {formData.category === 'article' && (
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                      Article Body
+                      <span className="ml-2 text-gray-600 font-normal text-xs">Supports: # Heading, ## Sub-heading, - List items, &gt; Blockquote, plain paragraphs</span>
+                    </label>
+                    <textarea
+                      value={formData.body || ''}
+                      onChange={(e) => setFormData({ ...formData, body: e.target.value || null })}
+                      rows={16}
+                      placeholder="Write your article content here...&#10;&#10;Use # for headings, ## for sub-headings, - for bullet lists, > for blockquotes."
+                      className="w-full px-4 py-2.5 rounded-lg bg-[#0f0f0f] border border-gray-700 text-white placeholder-gray-600 focus:outline-none focus:border-[#F4B400]/50 resize-y font-mono text-sm leading-relaxed"
+                    />
+                  </div>
+                )}
+
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-1.5">Category</label>
                   <select
@@ -316,6 +334,7 @@ export default function AdminResourcesPage() {
                     onChange={(e) => setFormData({ ...formData, category: e.target.value as Resource['category'] })}
                     className="w-full px-4 py-2.5 rounded-lg bg-[#0f0f0f] border border-gray-700 text-white focus:outline-none focus:border-[#F4B400]/50"
                   >
+                    <option value="article">Article</option>
                     <option value="course">Course</option>
                     <option value="pdf">PDF</option>
                     <option value="quiz">Quiz</option>

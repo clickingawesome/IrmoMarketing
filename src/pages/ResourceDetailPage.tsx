@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, BookOpen, FileText, HelpCircle, Gamepad2, DollarSign, Lock, ExternalLink } from 'lucide-react';
+import { ArrowLeft, BookOpen, FileText, HelpCircle, Gamepad2, DollarSign, Lock, ExternalLink, Newspaper, Clock, Calendar } from 'lucide-react';
 import { supabase, type Resource } from '../lib/supabase';
 import Header from '../components/Header';
 import SocialShare from '../components/SocialShare';
@@ -33,7 +33,55 @@ const CATEGORY_META: Record<string, { icon: typeof BookOpen; label: string; colo
   quiz: { icon: HelpCircle, label: 'Quiz', color: 'text-amber-400', bg: 'bg-amber-400/10 border-amber-400/20' },
   app: { icon: Gamepad2, label: 'Interactive', color: 'text-rose-400', bg: 'bg-rose-400/10 border-rose-400/20' },
   paid: { icon: DollarSign, label: 'Premium', color: 'text-[#F4B400]', bg: 'bg-[#F4B400]/10 border-[#F4B400]/20' },
+  article: { icon: Newspaper, label: 'Article', color: 'text-violet-400', bg: 'bg-violet-400/10 border-violet-400/20' },
 };
+
+function estimateReadTime(text: string): number {
+  const words = text.trim().split(/\s+/).length;
+  return Math.max(1, Math.ceil(words / 200));
+}
+
+function ArticleBody({ body }: { body: string }) {
+  const paragraphs = body.split(/\n\n+/);
+  return (
+    <div className="space-y-5">
+      {paragraphs.map((para, i) => {
+        const trimmed = para.trim();
+        if (!trimmed) return null;
+        if (trimmed.startsWith('# ')) {
+          return <h2 key={i} className="text-2xl font-bold text-white mt-8 mb-3 leading-snug">{trimmed.slice(2)}</h2>;
+        }
+        if (trimmed.startsWith('## ')) {
+          return <h3 key={i} className="text-xl font-bold text-white mt-6 mb-2 leading-snug">{trimmed.slice(3)}</h3>;
+        }
+        if (trimmed.startsWith('### ')) {
+          return <h4 key={i} className="text-lg font-semibold text-gray-100 mt-5 mb-2">{trimmed.slice(4)}</h4>;
+        }
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+          const items = trimmed.split('\n').filter(l => l.trim().startsWith('- ') || l.trim().startsWith('* '));
+          return (
+            <ul key={i} className="space-y-2 pl-1">
+              {items.map((item, j) => (
+                <li key={j} className="flex items-start gap-2.5 text-gray-300 leading-relaxed">
+                  <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#F4B400] flex-shrink-0" />
+                  <span>{item.replace(/^[-*]\s+/, '')}</span>
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        if (trimmed.startsWith('> ')) {
+          return (
+            <blockquote key={i} className="border-l-3 border-[#F4B400] pl-5 py-1 my-6">
+              <p className="text-gray-300 italic text-lg leading-relaxed">{trimmed.slice(2)}</p>
+            </blockquote>
+          );
+        }
+        return <p key={i} className="text-gray-300 leading-[1.8] text-[1.05rem]">{trimmed}</p>;
+      })}
+    </div>
+  );
+}
 
 export default function ResourceDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -119,6 +167,9 @@ export default function ResourceDetailPage() {
   const hasComponent = resource.component_path && COMPONENT_MAP[resource.component_path];
   const hasExternalUrl = resource.external_url;
   const hasPdfUrl = resource.pdf_url;
+  const isArticle = resource.category === 'article';
+  const readTime = isArticle && resource.body ? estimateReadTime(resource.body) : null;
+  const publishDate = new Date(resource.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
     <>
@@ -144,8 +195,8 @@ export default function ResourceDetailPage() {
               </Link>
             </div>
 
-            <div className="max-w-3xl">
-              <div className="flex items-center gap-3 mb-4">
+            <div className={isArticle ? 'max-w-2xl mx-auto' : 'max-w-3xl'}>
+              <div className="flex items-center gap-3 mb-4 flex-wrap">
                 <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase border ${config.bg} ${config.color}`}>
                   <Icon size={12} />
                   {config.label}
@@ -159,6 +210,20 @@ export default function ResourceDetailPage() {
                     <Lock size={10} />
                     ${resource.price}
                   </span>
+                )}
+                {isArticle && (
+                  <>
+                    <span className="inline-flex items-center gap-1.5 text-[11px] text-gray-500">
+                      <Calendar size={11} />
+                      {publishDate}
+                    </span>
+                    {readTime && (
+                      <span className="inline-flex items-center gap-1.5 text-[11px] text-gray-500">
+                        <Clock size={11} />
+                        {readTime} min read
+                      </span>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -193,6 +258,24 @@ export default function ResourceDetailPage() {
                     alt={resource.title}
                     className="w-full rounded-xl border border-gray-800/60 shadow-2xl"
                   />
+                </div>
+              )}
+
+              {isArticle && resource.body && (
+                <div className="border-t border-gray-800/60 pt-10">
+                  <ArticleBody body={resource.body} />
+                  <div className="mt-12 pt-8 border-t border-gray-800/60">
+                    <div className="flex items-center justify-between flex-wrap gap-4">
+                      <SocialShare url={shareUrl} title={resource.title} description={resource.description} />
+                      <Link
+                        to="/resources"
+                        className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+                      >
+                        <ArrowLeft size={14} />
+                        Back to Resources
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

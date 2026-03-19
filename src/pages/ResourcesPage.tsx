@@ -8,6 +8,7 @@ import { supabase, type Resource } from '../lib/supabase';
 
 const CATEGORY_FILTERS = [
   { key: 'all', label: 'All' },
+  { key: 'article', label: 'Articles' },
   { key: 'course', label: 'Courses' },
   { key: 'pdf', label: 'PDFs' },
   { key: 'quiz', label: 'Quizzes' },
