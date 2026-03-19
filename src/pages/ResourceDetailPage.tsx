@@ -41,6 +41,28 @@ function estimateReadTime(text: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
+function ArticleAuthor() {
+  return (
+    <div className="mt-12 rounded-2xl border border-gray-800/60 bg-[#141414] p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+      <img
+        src="/Nick_Irmo.png"
+        alt="Nick Irmo"
+        className="w-20 h-20 rounded-full object-cover border-2 border-[#F4B400]/30 flex-shrink-0"
+      />
+      <div>
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-[#F4B400] mb-1">Written by</p>
+        <h4 className="text-white text-xl font-bold mb-2">Nick Irmo</h4>
+        <p className="text-gray-400 text-sm leading-relaxed">
+          Nick Irmo is a marketing strategist with 15+ years of experience across B2B and B2C markets.
+          He specializes in growth strategy, brand building, and AI-driven marketing — helping teams cut through
+          the noise and drive measurable results. He's worked across industries from tech startups to enterprise,
+          and is passionate about making advanced marketing accessible to everyone.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function ArticleBody({ body }: { body: string }) {
   const paragraphs = body.split(/\n\n+/);
   return (
@@ -264,6 +286,7 @@ export default function ResourceDetailPage() {
               {isArticle && resource.body && (
                 <div className="border-t border-gray-800/60 pt-10">
                   <ArticleBody body={resource.body} />
+                  <ArticleAuthor />
                   <div className="mt-12 pt-8 border-t border-gray-800/60">
                     <div className="flex items-center justify-between flex-wrap gap-4">
                       <SocialShare url={shareUrl} title={resource.title} description={resource.description} />
