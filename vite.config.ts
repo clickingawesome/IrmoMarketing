@@ -8,4 +8,9 @@ export default defineConfig({
     exclude: ['lucide-react'],
     include: ['mammoth'],
   },
+  build: {
+    rollupOptions: {
+      external: ['mammoth'],
+    },
+  },
 });
