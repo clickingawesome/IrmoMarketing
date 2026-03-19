@@ -9,6 +9,7 @@ import SEO from '../components/SEO';
 
 const ZeroClickCourse = lazy(() => import('./Resources/zero-click-course'));
 const MarketingTitleQuiz = lazy(() => import('./Resources/marketing-title-quiz'));
+const MarketingCapacityQuiz = lazy(() => import('./Resources/marketing-capacity-quiz'));
 const PDFFlipbook = lazy(() => import('../components/Resources/flipbook'));
 const TrollKingGame = lazy(() => import('./Resources/game'));
 const TrollKingDeluxe = lazy(() => import('./Resources/game2'));
@@ -16,6 +17,7 @@ const TrollKingDeluxe = lazy(() => import('./Resources/game2'));
 const COMPONENT_MAP: Record<string, React.LazyExoticComponent<React.ComponentType>> = {
   'zero-click-course': ZeroClickCourse,
   'marketing-title-quiz': MarketingTitleQuiz,
+  'marketing-capacity-quiz': MarketingCapacityQuiz,
   'flipbook': PDFFlipbook,
   'troll-king-game': TrollKingGame,
   'troll-king-deluxe': TrollKingDeluxe,
