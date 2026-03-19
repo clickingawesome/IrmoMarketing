@@ -11,6 +11,7 @@ const ZeroClickCourse = lazy(() => import('./Resources/zero-click-course'));
 const MarketingTitleQuiz = lazy(() => import('./Resources/marketing-title-quiz'));
 const MarketingCapacityQuiz = lazy(() => import('./Resources/marketing-capacity-quiz'));
 const AIReplacementQuiz = lazy(() => import('./Resources/ai-replacement-quiz'));
+const MisfortunateCookie = lazy(() => import('./Resources/misfortunate-cookie-v2'));
 const PDFFlipbook = lazy(() => import('../components/Resources/flipbook'));
 const TrollKingGame = lazy(() => import('./Resources/game'));
 const TrollKingDeluxe = lazy(() => import('./Resources/game2'));
@@ -20,6 +21,7 @@ const COMPONENT_MAP: Record<string, React.LazyExoticComponent<React.ComponentTyp
   'marketing-title-quiz': MarketingTitleQuiz,
   'marketing-capacity-quiz': MarketingCapacityQuiz,
   'ai-replacement-quiz': AIReplacementQuiz,
+  'misfortunate-cookie': MisfortunateCookie,
   'flipbook': PDFFlipbook,
   'troll-king-game': TrollKingGame,
   'troll-king-deluxe': TrollKingDeluxe,
