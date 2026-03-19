@@ -279,11 +279,22 @@ export default function ResourceDetailPage() {
 
               {resource.thumbnail_url && (
                 <div className="mb-10">
-                  <img
-                    src={resource.thumbnail_url}
-                    alt={resource.title}
-                    className="w-full rounded-xl border border-gray-800/60 shadow-2xl"
-                  />
+                  {/\.(mp4|webm|ogg)(\?.*)?$/i.test(resource.thumbnail_url) ? (
+                    <video
+                      src={resource.thumbnail_url}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full rounded-xl border border-gray-800/60 shadow-2xl"
+                    />
+                  ) : (
+                    <img
+                      src={resource.thumbnail_url}
+                      alt={resource.title}
+                      className="w-full rounded-xl border border-gray-800/60 shadow-2xl"
+                    />
+                  )}
                 </div>
               )}
 
