@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Plus, Trash2, Save, GripVertical, Eye, EyeOff, Star, ExternalLink } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { Plus, Trash2, Save, GripVertical, Eye, EyeOff, Star, ExternalLink, Upload, X, Image as ImageIcon } from 'lucide-react';
 import { supabase, type Resource } from '../lib/supabase';
 import AdminNav from '../components/AdminNav';
 import { CATEGORY_CONFIG } from '../components/ResourceCard';
@@ -36,6 +36,8 @@ export default function AdminResourcesPage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [tagInput, setTagInput] = useState('');
+  const [thumbnailUploading, setThumbnailUploading] = useState(false);
+  const thumbnailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchResources();
@@ -122,6 +124,38 @@ export default function AdminResourcesPage() {
 
   function removeTag(tag: string) {
     setFormData({ ...formData, tags: formData.tags.filter(t => t !== tag) });
+  }
+
+  async function handleThumbnailUpload(file: File) {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showMessage('error', 'Please select an image file');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showMessage('error', 'Image must be under 5 MB');
+      return;
+    }
+
+    setThumbnailUploading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from('resource-thumbnails')
+        .upload(filename, file, { upsert: false });
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('resource-thumbnails').getPublicUrl(filename);
+      setFormData((prev) => ({ ...prev, thumbnail_url: data.publicUrl }));
+      showMessage('success', 'Thumbnail uploaded');
+    } catch (err: any) {
+      console.error('Thumbnail upload error:', err);
+      showMessage('error', err.message || 'Failed to upload thumbnail');
+    } finally {
+      setThumbnailUploading(false);
+    }
   }
 
   async function handleSave() {
@@ -354,14 +388,76 @@ export default function AdminResourcesPage() {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-1.5">Thumbnail URL</label>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                    Thumbnail
+                    <span className="ml-2 text-gray-600 font-normal text-xs">Recommended: 1200 × 630 px (16:9), JPG or PNG, under 5 MB</span>
+                  </label>
+
                   <input
-                    type="text"
-                    value={formData.thumbnail_url || ''}
-                    onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value || null })}
-                    className="w-full px-4 py-2.5 rounded-lg bg-[#0f0f0f] border border-gray-700 text-white focus:outline-none focus:border-[#F4B400]/50"
+                    ref={thumbnailInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleThumbnailUpload(file);
+                      e.target.value = '';
+                    }}
                   />
+
+                  {formData.thumbnail_url ? (
+                    <div className="relative group w-full max-w-sm">
+                      <img
+                        src={formData.thumbnail_url}
+                        alt="Thumbnail preview"
+                        className="w-full aspect-video object-cover rounded-lg border border-gray-700"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => thumbnailInputRef.current?.click()}
+                          disabled={thumbnailUploading}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors"
+                        >
+                          <Upload size={13} />
+                          Replace
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setFormData((prev) => ({ ...prev, thumbnail_url: null }))}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 text-xs font-medium transition-colors"
+                        >
+                          <X size={13} />
+                          Remove
+                        </button>
+                      </div>
+                      {thumbnailUploading && (
+                        <div className="absolute inset-0 bg-black/70 rounded-lg flex items-center justify-center">
+                          <span className="text-white text-sm">Uploading...</span>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => thumbnailInputRef.current?.click()}
+                      disabled={thumbnailUploading}
+                      className="flex flex-col items-center justify-center gap-3 w-full max-w-sm aspect-video rounded-lg border-2 border-dashed border-gray-700 hover:border-[#F4B400]/50 hover:bg-[#F4B400]/5 transition-all text-gray-500 hover:text-gray-300 disabled:opacity-50"
+                    >
+                      {thumbnailUploading ? (
+                        <span className="text-sm">Uploading...</span>
+                      ) : (
+                        <>
+                          <ImageIcon size={28} />
+                          <div className="text-center">
+                            <p className="text-sm font-medium">Click to upload thumbnail</p>
+                            <p className="text-xs text-gray-600 mt-0.5">1200 × 630 px recommended</p>
+                          </div>
+                        </>
+                      )}
+                    </button>
+                  )}
                 </div>
 
                 <div>
