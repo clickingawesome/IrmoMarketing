@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Menu, X, Settings, ChevronDown, Briefcase, Images, BookOpen, Library, Music, Download, Star, ArrowRight, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 
 const creativeItems = [
   {
@@ -45,7 +46,7 @@ export default function Header() {
   const [isCreativeOpen, setIsCreativeOpen] = useState(false);
   const [isMobileCreativeOpen, setIsMobileCreativeOpen] = useState(false);
   const [isMobileAdminOpen, setIsMobileAdminOpen] = useState(false);
-  const [isAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const adminRef = useRef<HTMLDivElement>(null);
   const creativeRef = useRef<HTMLDivElement>(null);
@@ -53,6 +54,14 @@ export default function Header() {
   const location = useLocation();
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAdmin(!!session);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAdmin(!!session);
+    });
+
     function handleClickOutside(event: MouseEvent) {
       if (adminRef.current && !adminRef.current.contains(event.target as Node)) {
         setIsAdminOpen(false);
@@ -69,6 +78,7 @@ export default function Header() {
     document.addEventListener('mousedown', handleClickOutside);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
+      subscription.unsubscribe();
       document.removeEventListener('mousedown', handleClickOutside);
       window.removeEventListener('scroll', handleScroll);
     };
