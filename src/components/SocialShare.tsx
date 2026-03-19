@@ -12,6 +12,7 @@ export default function SocialShare({ url, title, description }: SocialShareProp
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
   const encodedDesc = encodeURIComponent(description);
+  const tweetText = encodeURIComponent(`${title}\n\n${description}`);
 
   const copyLink = async () => {
     await navigator.clipboard.writeText(url);
@@ -26,7 +27,7 @@ export default function SocialShare({ url, title, description }: SocialShareProp
         Share
       </span>
       <a
-        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
+        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedDesc}`}
         target="_blank"
         rel="noopener noreferrer"
         className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 hover:bg-[#0077B5]/20 text-gray-400 hover:text-[#0077B5] transition-all duration-200"
@@ -34,7 +35,7 @@ export default function SocialShare({ url, title, description }: SocialShareProp
         <Linkedin size={16} />
       </a>
       <a
-        href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
+        href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${tweetText}`}
         target="_blank"
         rel="noopener noreferrer"
         className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-200"
