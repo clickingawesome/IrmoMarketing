@@ -31,9 +31,11 @@ Deno.serve(async (req: Request) => {
       throw new Error("RESEND_API_KEY is not configured");
     }
 
-    const emailHtml = `
+    const firstName = name.split(" ")[0];
+
+    const adminEmailHtml = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #111; margin-bottom: 8px;">🎉 New Lead Captured!</h2>
+        <h2 style="color: #111; margin-bottom: 8px;">New Lead Captured!</h2>
         <p style="color: #666; margin-bottom: 24px;">Someone just downloaded your resource.</p>
 
         <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
@@ -68,27 +70,86 @@ Deno.serve(async (req: Request) => {
       </div>
     `;
 
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "Lead Capture <onboarding@resend.dev>",
-        to: ["nick.irmo@gmail.com"],
-        reply_to: email,
-        subject: `New Lead: ${name} downloaded ${resourceTitle}`,
-        html: emailHtml,
-      }),
-    });
+    const userEmailHtml = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        <div style="background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 100%); border-radius: 12px 12px 0 0; padding: 40px 40px 32px;">
+          <h1 style="color: #ffffff; font-size: 28px; font-weight: 400; margin: 0 0 8px; font-family: Georgia, serif; letter-spacing: -0.02em;">
+            You're all set, ${firstName}!
+          </h1>
+          <p style="color: rgba(255,255,255,0.6); font-size: 16px; margin: 0; line-height: 1.5;">
+            Thanks for downloading <strong style="color: rgba(255,255,255,0.9);">${resourceTitle}</strong>.
+          </p>
+        </div>
 
-    if (!res.ok) {
-      const error = await res.text();
-      throw new Error(`Resend API error: ${error}`);
+        <div style="padding: 32px 40px; background: #f9fafb; border-radius: 0 0 12px 12px;">
+          <p style="color: #374151; font-size: 15px; line-height: 1.7; margin: 0 0 20px;">
+            Your resource is ready — if it didn't open automatically, just reply to this email and I'll send it directly.
+          </p>
+
+          <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px;">
+            <p style="margin: 0; color: #111827; font-weight: 600; font-size: 15px;">${resourceTitle}</p>
+            <p style="margin: 6px 0 0; color: #6b7280; font-size: 13px;">Free resource from Irmo Marketing</p>
+          </div>
+
+          <p style="color: #374151; font-size: 15px; line-height: 1.7; margin: 0 0 8px;">
+            If you have questions or want to talk strategy, feel free to reply — I read every email.
+          </p>
+
+          <p style="color: #374151; font-size: 15px; margin: 0;">
+            — Nick
+          </p>
+
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 28px 0 20px;" />
+
+          <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+            You're receiving this because you downloaded a free resource from <a href="https://nickeirmo.com" style="color: #6b7280; text-decoration: none;">nickeirmo.com</a>.
+          </p>
+        </div>
+      </div>
+    `;
+
+    const [adminRes, userRes] = await Promise.all([
+      fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: "Nick Irmo <onboarding@resend.dev>",
+          to: ["nick.irmo@gmail.com"],
+          reply_to: email,
+          subject: `New Lead: ${name} downloaded ${resourceTitle}`,
+          html: adminEmailHtml,
+        }),
+      }),
+      fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: "Nick Irmo <onboarding@resend.dev>",
+          to: [email],
+          reply_to: "nick.irmo@gmail.com",
+          subject: `Your free resource: ${resourceTitle}`,
+          html: userEmailHtml,
+        }),
+      }),
+    ]);
+
+    if (!adminRes.ok) {
+      const error = await adminRes.text();
+      throw new Error(`Resend API error (admin): ${error}`);
     }
 
-    const data = await res.json();
+    if (!userRes.ok) {
+      const error = await userRes.text();
+      throw new Error(`Resend API error (user): ${error}`);
+    }
+
+    const data = await adminRes.json();
 
     return new Response(JSON.stringify({ success: true, data }), {
       status: 200,
