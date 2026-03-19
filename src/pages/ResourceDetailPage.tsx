@@ -16,6 +16,7 @@ const PDFFlipbook = lazy(() => import('../components/Resources/flipbook'));
 const TrollKingGame = lazy(() => import('./Resources/game'));
 const TrollKingDeluxe = lazy(() => import('./Resources/game2'));
 const KDPFormatter = lazy(() => import('./Resources/kdp-formatter'));
+const WhatsForDinner = lazy(() => import('./Resources/WhatsForDinnerPublic'));
 
 const COMPONENT_MAP: Record<string, React.LazyExoticComponent<React.ComponentType>> = {
   'zero-click-course': ZeroClickCourse,
@@ -27,6 +28,7 @@ const COMPONENT_MAP: Record<string, React.LazyExoticComponent<React.ComponentTyp
   'troll-king-game': TrollKingGame,
   'troll-king-deluxe': TrollKingDeluxe,
   'iformatter': KDPFormatter,
+  'whats-for-dinner': WhatsForDinner,
 };
 
 const CATEGORY_META: Record<string, { icon: typeof BookOpen; label: string; color: string; bg: string }> = {
