@@ -132,8 +132,8 @@ export default function AdminResourcesPage() {
       showMessage('error', 'Please select an image file');
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      showMessage('error', 'Image must be under 5 MB');
+    if (file.size > 10 * 1024 * 1024) {
+      showMessage('error', 'Image must be under 10 MB');
       return;
     }
 
@@ -391,7 +391,7 @@ export default function AdminResourcesPage() {
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-400 mb-1.5">
                     Thumbnail
-                    <span className="ml-2 text-gray-600 font-normal text-xs">Recommended: 1200 × 630 px (16:9), JPG or PNG, under 5 MB</span>
+                    <span className="ml-2 text-gray-600 font-normal text-xs">Recommended: 1200 × 630 px (16:9), JPG, PNG, or GIF, under 10 MB</span>
                   </label>
 
                   <input
