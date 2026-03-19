@@ -72,37 +72,67 @@ Deno.serve(async (req: Request) => {
 
     const userEmailHtml = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
-        <div style="background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 100%); border-radius: 12px 12px 0 0; padding: 40px 40px 32px;">
-          <h1 style="color: #ffffff; font-size: 28px; font-weight: 400; margin: 0 0 8px; font-family: Georgia, serif; letter-spacing: -0.02em;">
-            You're all set, ${firstName}!
-          </h1>
-          <p style="color: rgba(255,255,255,0.6); font-size: 16px; margin: 0; line-height: 1.5;">
-            Thanks for downloading <strong style="color: rgba(255,255,255,0.9);">${resourceTitle}</strong>.
-          </p>
+        <div style="background: linear-gradient(135deg, #060d1a 0%, #0a1628 50%, #1a2a4a 100%); border-radius: 12px 12px 0 0; padding: 40px 40px 36px; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: -60px; right: -60px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0,224,150,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+          <div style="position: absolute; bottom: -40px; left: -40px; width: 160px; height: 160px; background: radial-gradient(circle, rgba(0,180,216,0.06) 0%, transparent 70%); border-radius: 50%;"></div>
+          <div style="position: relative;">
+            <div style="display: inline-block; background: rgba(0,224,150,0.1); border: 1px solid rgba(0,224,150,0.2); border-radius: 100px; padding: 4px 14px; font-size: 11px; color: #00e096; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 16px;">
+              ● You're In
+            </div>
+            <h1 style="color: #ffffff; font-size: 30px; font-weight: 400; margin: 0 0 10px; font-family: Georgia, serif; letter-spacing: -0.02em; line-height: 1.2;">
+              You're all set, ${firstName}!
+            </h1>
+            <p style="color: rgba(255,255,255,0.55); font-size: 15px; margin: 0; line-height: 1.6;">
+              Access to <strong style="color: rgba(255,255,255,0.9);">${resourceTitle}</strong> is ready for you below.
+            </p>
+          </div>
         </div>
 
-        <div style="padding: 32px 40px; background: #f9fafb; border-radius: 0 0 12px 12px;">
-          <p style="color: #374151; font-size: 15px; line-height: 1.7; margin: 0 0 20px;">
-            Your resource is ready — if it didn't open automatically, just reply to this email and I'll send it directly.
+        <div style="padding: 32px 40px 28px; background: #f9fafb;">
+          <p style="color: #374151; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">
+            Your resource is live — head back to the link to access it any time. If anything goes wrong, just reply here and I'll sort it out.
           </p>
 
-          <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px;">
-            <p style="margin: 0; color: #111827; font-weight: 600; font-size: 15px;">${resourceTitle}</p>
-            <p style="margin: 6px 0 0; color: #6b7280; font-size: 13px;">Free resource from Irmo Marketing</p>
+          <div style="background: linear-gradient(135deg, #060d1a 0%, #0f1e38 100%); border: 1px solid rgba(0,224,150,0.15); border-radius: 14px; padding: 0; overflow: hidden; margin-bottom: 28px;">
+            <div style="padding: 24px 24px 20px;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+                <div style="background: rgba(0,224,150,0.1); border: 1px solid rgba(0,224,150,0.2); border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">📘</div>
+                <div>
+                  <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #00e096; margin-bottom: 2px;">Mini-Course · Free</div>
+                  <div style="font-size: 16px; font-weight: 600; color: #ffffff; line-height: 1.3;">${resourceTitle}</div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06);">
+                <div style="text-align: center;">
+                  <div style="font-size: 18px; font-weight: 700; color: #00e096;">5</div>
+                  <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">Modules</div>
+                </div>
+                <div style="width: 1px; background: rgba(255,255,255,0.06);"></div>
+                <div style="text-align: center;">
+                  <div style="font-size: 18px; font-weight: 700; color: #00e096;">17</div>
+                  <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">Minutes</div>
+                </div>
+                <div style="width: 1px; background: rgba(255,255,255,0.06);"></div>
+                <div style="text-align: center;">
+                  <div style="font-size: 18px; font-weight: 700; color: #00e096;">30</div>
+                  <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">Day Plan</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <p style="color: #374151; font-size: 15px; line-height: 1.7; margin: 0 0 8px;">
-            If you have questions or want to talk strategy, feel free to reply — I read every email.
+            If you have questions or want to talk strategy, just hit reply — I read every email.
           </p>
 
-          <p style="color: #374151; font-size: 15px; margin: 0;">
+          <p style="color: #374151; font-size: 15px; margin: 0 0 28px;">
             — Nick
           </p>
 
-          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 28px 0 20px;" />
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 0 0 20px;" />
 
           <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-            You're receiving this because you downloaded a free resource from <a href="https://nickeirmo.com" style="color: #6b7280; text-decoration: none;">nickeirmo.com</a>.
+            You're receiving this because you signed up for a free resource from <a href="https://nickeirmo.com" style="color: #6b7280; text-decoration: none;">nickeirmo.com</a>.
           </p>
         </div>
       </div>
