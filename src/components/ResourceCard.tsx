@@ -24,12 +24,23 @@ export default function ResourceCard({ resource }: { resource: Resource }) {
       <div className="relative h-44 bg-gradient-to-br from-gray-900 to-[#1a1a1a] overflow-hidden">
         {resource.thumbnail_url ? (
           <>
-            <img
-              src={resource.thumbnail_url}
-              alt={resource.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              loading="lazy"
-            />
+            {resource.thumbnail_url.match(/\.mp4(\?|$)/i) ? (
+              <video
+                src={resource.thumbnail_url}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+            ) : (
+              <img
+                src={resource.thumbnail_url}
+                alt={resource.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </>
         ) : (

@@ -128,12 +128,12 @@ export default function AdminResourcesPage() {
 
   async function handleThumbnailUpload(file: File) {
     if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      showMessage('error', 'Please select an image file');
+    if (!file.type.startsWith('image/') && file.type !== 'video/mp4') {
+      showMessage('error', 'Please select an image or MP4 file');
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      showMessage('error', 'Image must be under 10 MB');
+    if (file.size > 50 * 1024 * 1024) {
+      showMessage('error', 'File must be under 50 MB');
       return;
     }
 
@@ -391,13 +391,13 @@ export default function AdminResourcesPage() {
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-400 mb-1.5">
                     Thumbnail
-                    <span className="ml-2 text-gray-600 font-normal text-xs">Recommended: 1200 × 630 px (16:9), JPG, PNG, or GIF, under 10 MB</span>
+                    <span className="ml-2 text-gray-600 font-normal text-xs">JPG, PNG, GIF, or MP4 — under 50 MB</span>
                   </label>
 
                   <input
                     ref={thumbnailInputRef}
                     type="file"
-                    accept="image/*"
+                    accept="image/*,video/mp4"
                     className="hidden"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
@@ -408,11 +408,22 @@ export default function AdminResourcesPage() {
 
                   {formData.thumbnail_url ? (
                     <div className="relative group w-full max-w-sm">
-                      <img
-                        src={formData.thumbnail_url}
-                        alt="Thumbnail preview"
-                        className="w-full aspect-video object-cover rounded-lg border border-gray-700"
-                      />
+                      {formData.thumbnail_url.match(/\.mp4(\?|$)/i) ? (
+                        <video
+                          src={formData.thumbnail_url}
+                          className="w-full aspect-video object-cover rounded-lg border border-gray-700"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                        />
+                      ) : (
+                        <img
+                          src={formData.thumbnail_url}
+                          alt="Thumbnail preview"
+                          className="w-full aspect-video object-cover rounded-lg border border-gray-700"
+                        />
+                      )}
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-3">
                         <button
                           type="button"
